@@ -5,16 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+// I'm no longer using this, I'm using reflection instead to enable these two properties
+
 // Change the namespace to your project's namespace.
 namespace GameOfLife {
 	class GraphicsPanel : Panel {
 		// Default constructor
 		public GraphicsPanel() {
 			// Turn on double buffering.
-			this.DoubleBuffered = true;
+			DoubleBuffered = true;
 
 			// Allow repainting when the window is resized.
-			this.SetStyle(ControlStyles.ResizeRedraw, true);
+			ResizeRedraw = true;
 		}
 	}
 }

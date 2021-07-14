@@ -11,7 +11,7 @@ using System.Windows.Forms;
 namespace GameOfLife {
 	public partial class Form1 : Form {
 		// The universe array
-		bool[,] universe = new bool[5, 5];
+		bool[,] universe = new bool[30, 30];
 
 		// Drawing colors
 		Color gridColor = Color.Black;
@@ -25,6 +25,12 @@ namespace GameOfLife {
 
 		public Form1() {
 			InitializeComponent();
+
+			//// Turn on panel double buffering.
+			//typeof(Panel).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(panel1, true);
+
+			//// Allow panel repainting when the window is resized.
+			//typeof(Panel).GetProperty("ResizeRedraw", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(panel1, true);
 
 			// Setup the timer
 			timer.Interval = 100; // milliseconds
@@ -51,9 +57,9 @@ namespace GameOfLife {
 		private void graphicsPanel1_Paint(object sender, PaintEventArgs e) {
 			// Calculate the width and height of each cell in pixels
 			// CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
-			int cellWidth = graphicsPanel1.ClientSize.Width / universe.GetLength(0);
+			float cellWidth = (float)graphicsPanel1.ClientSize.Width / universe.GetLength(0);
 			// CELL HEIGHT = WINDOW HEIGHT / NUMBER OF CELLS IN Y
-			int cellHeight = graphicsPanel1.ClientSize.Height / universe.GetLength(1);
+			float cellHeight = (float)graphicsPanel1.ClientSize.Height / universe.GetLength(1);
 
 			// A Pen for drawing the grid lines (color, width)
 			Pen gridPen = new Pen(gridColor, 1);
@@ -62,25 +68,38 @@ namespace GameOfLife {
 			Brush cellBrush = new SolidBrush(cellColor);
 
 			// Iterate through the universe in the y, top to bottom
-			for (int y = 0; y < universe.GetLength(1); y++) {
+			for (float y = 0; y < universe.GetLength(1); ++y) {
 				// Iterate through the universe in the x, left to right
-				for (int x = 0; x < universe.GetLength(0); x++) {
+				for (float x = 0; x < universe.GetLength(0); ++x) {
 					// A rectangle to represent each cell in pixels
-					Rectangle cellRect = Rectangle.Empty;
+					RectangleF cellRect = RectangleF.Empty;
 					cellRect.X = x * cellWidth;
 					cellRect.Y = y * cellHeight;
 					cellRect.Width = cellWidth;
 					cellRect.Height = cellHeight;
 
 					// Fill the cell with a brush if alive
-					if (universe[x, y] == true) {
+					if (universe[(int)x, (int)y] == true) {
 						e.Graphics.FillRectangle(cellBrush, cellRect);
 					}
-
-					// Outline the cell with a pen
-					e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
 				}
 			}
+
+			// Drawing the Y-axis grid lines
+			for (float y = 1; y < universe.GetLength(1); ++y) {
+				gridPen.Width = (0 == y % 10) ? 2 : 1;
+				e.Graphics.DrawLine(gridPen, 0, y * cellHeight, graphicsPanel1.Width, y * cellHeight);
+			}
+
+			// Drawing the X-axis grid lines
+			for (float x = 1; x < universe.GetLength(0); ++x) {
+				gridPen.Width = (0 == x % 10) ? 2 : 1;
+				e.Graphics.DrawLine(gridPen, x * cellWidth, 0, x * cellWidth, graphicsPanel1.Height);
+			}
+
+			// Drawing enclosing rectangle
+			gridPen.Width = 4;
+			e.Graphics.DrawRectangle(gridPen, 0, 0, graphicsPanel1.Width, graphicsPanel1.Height);
 
 			// Cleaning up pens and brushes
 			gridPen.Dispose();
@@ -91,17 +110,17 @@ namespace GameOfLife {
 			// If the left mouse button was clicked
 			if (e.Button == MouseButtons.Left) {
 				// Calculate the width and height of each cell in pixels
-				int cellWidth = graphicsPanel1.ClientSize.Width / universe.GetLength(0);
-				int cellHeight = graphicsPanel1.ClientSize.Height / universe.GetLength(1);
+				float cellWidth = (float)graphicsPanel1.ClientSize.Width / universe.GetLength(0);
+				float cellHeight = (float)graphicsPanel1.ClientSize.Height / universe.GetLength(1);
 
 				// Calculate the cell that was clicked in
 				// CELL X = MOUSE X / CELL WIDTH
-				int x = e.X / cellWidth;
+				float x = e.X / cellWidth;
 				// CELL Y = MOUSE Y / CELL HEIGHT
-				int y = e.Y / cellHeight;
+				float y = e.Y / cellHeight;
 
 				// Toggle the cell's state
-				universe[x, y] = !universe[x, y];
+				universe[(int)x, (int)y] = !universe[(int)x, (int)y];
 
 				// Tell Windows you need to repaint
 				graphicsPanel1.Invalidate();
