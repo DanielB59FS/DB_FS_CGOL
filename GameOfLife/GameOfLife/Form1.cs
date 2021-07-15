@@ -21,18 +21,21 @@ namespace GameOfLife {
 			_isAlive = isAlive;
 		}
 		public CellPoint(Point p, bool isAlive = false) : this(p.X, p.Y, isAlive) { }
+		public CellPoint(CellPoint p) : this(p._x, p._y, p._isAlive) {
+			_neighbors = p._neighbors;
+		}
 	}
 	public partial class Form1 : Form {
 		// The universe array
-		CellPoint[,] universe = new CellPoint[10, 10];
-		CellPoint[,] sketch = new CellPoint[10, 10];
+		CellPoint[,] universe = new CellPoint[20, 20];
+		CellPoint[,] sketch = new CellPoint[20, 20];
 
 		// Drawing colors
 		Color gridColor = Color.Black;
 		Color cellColor = Color.Gray;
 
 		// The Timer class
-		Timer timer = new Timer();
+		GameTimer timer = new GameTimer();
 
 		// Generation count
 		BigInteger generations = 0;
@@ -122,27 +125,43 @@ namespace GameOfLife {
 			// Setup the timer
 			timer.Interval = 100; // milliseconds
 			timer.Tick += Timer_Tick;
-			timer.Enabled = true; // start timer running
+			//timer.Enabled = true; // start timer running
 		}
 
 		// Calculate the next generation of cells
 		private void NextGeneration() {
 
-			// Increment generation count
-			generations++;
+			// Generating the next generation data
+			for (int i = 0; i < universe.GetLength(0); ++i) {
+				for (int j = 0; j < universe.GetLength(1); ++j) {
+					CellPoint cell = universe[i, j];
+					if (!cell._isAlive && 3 == cell._neighbors)
+						cell._isAlive = true;
+					else if ((cell._isAlive && cell._neighbors < 2) || (cell._isAlive && 3 < cell._neighbors))
+						cell._isAlive = false;
+					sketch[i, j] = cell;
+				}
+			}
 
-			// Update status strip generations
-			toolStripStatusLabelGenerations.Text = $"Generations: {generations} Interval: {timer.Interval} Alive: {_alive} Seed: {Properties.Settings.Default.Seed}";
+			var temp = universe;
+			universe = sketch;
+			sketch = temp;
+			//universe = sketch.Clone() as CellPoint[,];
+
+			// Increment generation count
+			++generations;
+
+			//// Update status strip generations
+			//toolStripStatusLabelGenerations.Text = $"Generations: {generations} Interval: {timer.Interval} Alive: {_alive} Seed: {Properties.Settings.Default.Seed}";
 		}
 
 		// The event called by the timer every Interval milliseconds.
 		private void Timer_Tick(object sender, EventArgs e) {
 			NextGeneration();
+			graphicsPanel1.Invalidate();
 		}
 
 		private void graphicsPanel1_Paint(object sender, PaintEventArgs e) {
-			_alive = 0;
-			
 			// Checking for neighbors
 			foreach (CellPoint p in universe)
 				CountNeighborsToroidal(p._x, p._y);
@@ -178,8 +197,15 @@ namespace GameOfLife {
 
 					// Drawing the number of neighbors
 					if (0 != universe[(int)x, (int)y]._neighbors) {
-						cellBrush.Color = (universe[(int)x, (int)y]._neighbors < 2 || 3 < universe[(int)x, (int)y]._neighbors) ? Color.Red : Color.Green;
-						e.Graphics.DrawString(universe[(int)x, (int)y]._neighbors.ToString(), graphicsPanel1.Font, cellBrush, cellRect);
+						//cellBrush.Color = (!universe[(int)x, (int)y]._isAlive && (universe[(int)x, (int)y]._neighbors < 2 || 3 < universe[(int)x, (int)y]._neighbors)) ? Color.Red : Color.Green;
+						CellPoint cell = universe[(int)x, (int)y];
+						if (!cell._isAlive && 3 == cell._neighbors)
+							cellBrush.Color = Color.Green;
+						else if ((cell._isAlive && cell._neighbors < 2) || (cell._isAlive && 3 < cell._neighbors))
+							cellBrush.Color = Color.Red;
+						else
+							cellBrush.Color = cell._isAlive ? Color.Green : Color.Red;
+						e.Graphics.DrawString(cell._neighbors.ToString(), graphicsPanel1.Font, cellBrush, cellRect);
 						cellBrush.Color = Color.LightGray;
 					}
 				}
@@ -200,6 +226,9 @@ namespace GameOfLife {
 			// Drawing enclosing rectangle
 			gridPen.Width = 4;
 			e.Graphics.DrawRectangle(gridPen, 0, 0, graphicsPanel1.Width, graphicsPanel1.Height);
+
+			// Update status strip generations
+			toolStripStatusLabelGenerations.Text = $"Generations: {generations} Interval: {timer.Interval} Alive: {_alive} Seed: {Properties.Settings.Default.Seed}";
 
 			// Cleaning up pens and brushes
 			gridPen.Dispose();
@@ -225,6 +254,31 @@ namespace GameOfLife {
 				// Tell Windows you need to repaint
 				graphicsPanel1.Invalidate();
 			}
+		}
+
+		private void playToolStripButton_Click(object sender, EventArgs e) {
+			timer.Enabled = true;
+		}
+
+		private void stepToolStripButton_Click(object sender, EventArgs e) {
+			timer.Step();
+		}
+
+		private void pauseToolStripButton_Click(object sender, EventArgs e) {
+			timer.Enabled = false;
+		}
+
+		private void newToolStripButton_Click(object sender, EventArgs e) {
+			for (int i = 0; i < universe.GetLength(0); ++i) {
+				for (int j = 0; j < universe.GetLength(1); ++j) {
+					universe[i, j] = new CellPoint(i, j);
+				}
+			}
+			graphicsPanel1.Invalidate();
+		}
+
+		private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
+			Application.Exit();
 		}
 	}
 }
