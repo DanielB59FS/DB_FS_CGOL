@@ -10,21 +10,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GameOfLife {
-	public struct CellPoint {
-		public int _x, _y;
-		public int _neighbors;
-		public bool _isAlive;
-		public CellPoint(int x, int y, bool isAlive = false) {
-			_x = x;
-			_y = y;
-			_neighbors = 0;
-			_isAlive = isAlive;
-		}
-		public CellPoint(Point p, bool isAlive = false) : this(p.X, p.Y, isAlive) { }
-		public CellPoint(CellPoint p) : this(p._x, p._y, p._isAlive) {
-			_neighbors = p._neighbors;
-		}
-	}
 	public partial class Form1 : Form {
 		// The universe array
 		CellPoint[,] universe = new CellPoint[20, 20];
