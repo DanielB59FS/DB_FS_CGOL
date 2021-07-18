@@ -13,7 +13,7 @@ namespace GameOfLife {
 		public BigInteger Generation { get; private set; } = 0;
 		public BigInteger Alive { get; private set; } = 0;
 
-		public GridDataModel(uint n, uint m) {
+		public GridDataModel(int n, int m) {
 			_universe = new CellPoint[n, m];
 			_sketch = new CellPoint[n, m];
 		}
