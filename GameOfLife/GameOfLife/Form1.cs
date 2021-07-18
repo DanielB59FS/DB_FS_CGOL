@@ -163,6 +163,10 @@ namespace GameOfLife {
 			// A Brush for filling living cells interiors (color)
 			SolidBrush cellBrush = new SolidBrush(cellColor);
 
+			// A string format for the graphcis panel
+			StringFormat format = new StringFormat(StringFormat.GenericDefault);
+			format.Alignment = StringAlignment.Center;
+
 			// Iterate through the universe in the y, top to bottom
 			for (float y = 0; y < universe.GetLength(1); ++y) {
 				// Iterate through the universe in the x, left to right
@@ -190,7 +194,8 @@ namespace GameOfLife {
 							cellBrush.Color = Color.Red;
 						else
 							cellBrush.Color = cell._isAlive ? Color.Green : Color.Red;
-						e.Graphics.DrawString(cell._neighbors.ToString(), graphicsPanel1.Font, cellBrush, cellRect);
+						graphicsPanel1.Font = new Font(Font.FontFamily, cellHeight, GraphicsUnit.Pixel);
+						e.Graphics.DrawString(cell._neighbors.ToString(), graphicsPanel1.Font, cellBrush, cellRect, format);
 						cellBrush.Color = Color.LightGray;
 					}
 				}
