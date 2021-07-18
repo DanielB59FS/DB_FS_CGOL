@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GameOfLife {
-	class CellPoint {
+	public struct CellPoint {
 		public int _x, _y;
 		public int _neighbors;
 		public bool _isAlive;
@@ -21,7 +21,7 @@ namespace GameOfLife {
 			_neighbors = p._neighbors;
 		}
 	}
-	class RectangleBoundary : IBoundary<CellPoint> {
+	public class RectangleBoundary : IBoundary<CellPoint> {
 		public int _x, _y, _w, _h;
 
 		public IBoundary<CellPoint> GetNEReigon() {

@@ -29,6 +29,7 @@ namespace GameOfLife {
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -45,7 +46,6 @@ namespace GameOfLife {
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.toolStripStatusLabelGenerations = new System.Windows.Forms.ToolStripStatusLabel();
-			this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.graphicsPanel1 = new GameOfLife.GraphicsPanel();
 			this.menuStrip1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
@@ -76,7 +76,6 @@ namespace GameOfLife {
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
 			this.fileToolStripMenuItem.Text = "&File";
-			this.fileToolStripMenuItem.Click += new System.EventHandler(this.newToolStripButton_Click);
 			// 
 			// newToolStripMenuItem
 			// 
@@ -86,6 +85,7 @@ namespace GameOfLife {
 			this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
 			this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.newToolStripMenuItem.Text = "&New";
+			this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripButton_Click);
 			// 
 			// openToolStripMenuItem
 			// 
@@ -97,6 +97,14 @@ namespace GameOfLife {
 			this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.openToolStripMenuItem.Text = "&Open";
 			this.openToolStripMenuItem.Visible = false;
+			// 
+			// importToolStripMenuItem
+			// 
+			this.importToolStripMenuItem.Enabled = false;
+			this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+			this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.importToolStripMenuItem.Text = "Import";
+			this.importToolStripMenuItem.Visible = false;
 			// 
 			// toolStripSeparator
 			// 
@@ -235,14 +243,6 @@ namespace GameOfLife {
 			this.toolStripStatusLabelGenerations.Name = "toolStripStatusLabelGenerations";
 			this.toolStripStatusLabelGenerations.Size = new System.Drawing.Size(90, 17);
 			this.toolStripStatusLabelGenerations.Text = "Generations = 0";
-			// 
-			// importToolStripMenuItem
-			// 
-			this.importToolStripMenuItem.Enabled = false;
-			this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-			this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.importToolStripMenuItem.Text = "Import";
-			this.importToolStripMenuItem.Visible = false;
 			// 
 			// graphicsPanel1
 			// 

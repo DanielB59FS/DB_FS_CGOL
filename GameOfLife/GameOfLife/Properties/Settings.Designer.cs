@@ -34,5 +34,38 @@ namespace GameOfLife.Properties {
                 this["Seed"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public int UniverseWidthCellCount {
+            get {
+                return ((int)(this["UniverseWidthCellCount"]));
+            }
+            set {
+                this["UniverseWidthCellCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public int UniverseHeightCellCount {
+            get {
+                return ((int)(this["UniverseHeightCellCount"]));
+            }
+            set {
+                this["UniverseHeightCellCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool QuadTreeModel {
+            get {
+                return ((bool)(this["QuadTreeModel"]));
+            }
+        }
     }
 }
