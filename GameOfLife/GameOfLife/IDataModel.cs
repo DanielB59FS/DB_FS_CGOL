@@ -13,9 +13,7 @@ namespace GameOfLife {
 		BigInteger Alive { get; set; }
 		void Reset();
 		T this[int i, int j] { get; set; }
-		void CountNeighbors(bool toroidal);
-		void CountNeighbors(int i, int j, bool toroidal);
-		void UpdateNeighbors(int i, int j, bool toroidal);
+		void UpdateNeighbors(int x, int y, bool toroidal);
 		void ToggleCell(int x, int y);
 		void NextGeneration();
 	}

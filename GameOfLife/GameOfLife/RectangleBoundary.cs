@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GameOfLife {
-	public struct CellPoint {
+	public class CellPoint {
 		public int _x, _y;
 		public int _neighbors;
 		public bool _isAlive;

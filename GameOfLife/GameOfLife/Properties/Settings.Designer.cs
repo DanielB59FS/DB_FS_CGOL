@@ -67,5 +67,17 @@ namespace GameOfLife.Properties {
                 return ((bool)(this["QuadTreeModel"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ToroidalMode {
+            get {
+                return ((bool)(this["ToroidalMode"]));
+            }
+            set {
+                this["ToroidalMode"] = value;
+            }
+        }
     }
 }

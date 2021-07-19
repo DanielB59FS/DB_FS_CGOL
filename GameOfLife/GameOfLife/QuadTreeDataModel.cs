@@ -47,19 +47,7 @@ namespace GameOfLife {
 			foreach (CellPoint cell in cells) if (cell._isAlive) ++selectedCell._neighbors;
 		}
 
-		public void CountNeighborsToroidal(int x, int y) {
-			//
-		}
-
-		public void CountNeighbors(bool toroidal) {
-			//
-		}
-
-		public void CountNeighbors(int i, int j, bool toroidal) {
-			//
-		}
-
-		public void UpdateNeighbors(int i, int j, bool toroidal) {
+		public void UpdateNeighbors(int x, int y, bool toroidal) {
 			//
 		}
 

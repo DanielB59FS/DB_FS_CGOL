@@ -50,9 +50,7 @@ namespace GameOfLife {
 		}
 
 		private void graphicsPanel1_Paint(object sender, PaintEventArgs e) {
-			// Checking for neighbors
-			//Program.ModelInstance.CountNeighbors(true);
-
+			
 			// Calculate the width and height of each cell in pixels
 			// CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
 			float cellWidth = (float)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth;
@@ -117,12 +115,6 @@ namespace GameOfLife {
 				float y = e.Y / cellHeight;
 
 				// Toggle the cell's state
-				//universe[(int)x, (int)y]._isAlive = !universe[(int)x, (int)y]._isAlive;
-				//if (Program.ModelInstance[(int)x, (int)y]._isAlive = !Program.ModelInstance[(int)x, (int)y]._isAlive)
-				//	++Program.ModelInstance.Alive;
-				//else
-				//	--Program.ModelInstance.Alive;
-				//Program.ModelInstance.UpdateNeighbors((int)x, (int)y, true);
 				Program.ModelInstance.ToggleCell((int)x, (int)y);
 
 				// Tell Windows you need to repaint
