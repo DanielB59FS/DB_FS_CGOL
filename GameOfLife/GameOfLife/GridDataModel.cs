@@ -10,6 +10,17 @@ namespace GameOfLife {
 	public class GridDataModel : IDataModel<CellPoint> {
 		private CellPoint[,] _universe = null;
 
+		private bool _isToroidal;
+		public bool IsToroidal {
+			get => _isToroidal;
+			set {
+				_isToroidal = value;
+				if (0 != Alive) {
+					foreach (CellPoint cell in _universe) cell._neighbors = 0;
+					foreach (CellPoint cell in _universe) if (cell._isAlive) UpdateNeighbors(cell._x, cell._y);
+				}
+			}
+		}
 		public int GridWidth { get; set; }
 		public int GridHeight { get; set; }
 
@@ -19,8 +30,7 @@ namespace GameOfLife {
 		public GridDataModel(int n, int m) {
 			GridWidth = n;
 			GridHeight = m;
-			//Reset();
-			GenerateCells(Properties.Settings.Default.Seed);
+			Reset();
 		}
 
 		public void Reset() {
@@ -41,8 +51,6 @@ namespace GameOfLife {
 		public void GenerateCells(int seed) {
 			Random prng = new Random(seed);
 
-			Reset();
-
 			List<CellPoint> delta = new List<CellPoint>();
 			foreach (CellPoint cell in _universe) {
 				if (0 == prng.Next(2)) {
@@ -53,42 +61,11 @@ namespace GameOfLife {
 				else
 					cell._isAlive = false;
 			}
-			foreach (CellPoint cell in delta) UpdateNeighbors(cell._x, cell._y, Properties.Settings.Default.ToroidalMode);
+			foreach (CellPoint cell in delta) UpdateNeighbors(cell._x, cell._y);
 		}
 
-		public void CountNeighborsFinite(int x, int y) {
-			int count = 0;
-			int xLen = _universe.GetLength(0);
-			int yLen = _universe.GetLength(1);
-
-			for (int yOffset = -1; yOffset <= 1; ++yOffset)
-				for (int xOffset = -1; xOffset <= 1; ++xOffset) {
-					int xCheck = x + xOffset;
-					int yCheck = y + yOffset;
-
-					// if xOffset and yOffset are both equal to 0 then continue
-					if (0 == xOffset && 0 == yOffset) continue;
-
-					// if xCheck is less than 0 then continue
-					if (xCheck < 0) continue;
-
-					// if yCheck is less than 0 then continue
-					if (yCheck < 0) continue;
-
-					// if xCheck is greater than or equal too xLen then continue
-					if (xLen <= xCheck) continue;
-
-					// if yCheck is greater than or equal too yLen then continue
-					if (yLen <= yCheck) continue;
-
-					if (_universe[xCheck, yCheck]._isAlive == true) ++count;
-				}
-
-			_universe[x, y]._neighbors = count;
-		}
-
-		public void UpdateNeighbors(int x, int y, bool toroidal) {
-			if (toroidal)
+		public void UpdateNeighbors(int x, int y) {
+			if (IsToroidal)
 				UpdateNeighborsToroidal(x, y);
 			else
 				UpdateNeighborsFinite(x, y);
@@ -162,7 +139,7 @@ namespace GameOfLife {
 				++Program.ModelInstance.Alive;
 			else
 				--Program.ModelInstance.Alive;
-			UpdateNeighbors(x, y, Properties.Settings.Default.ToroidalMode);
+			UpdateNeighbors(x, y);
 		}
 
 		// Calculate the next generation of cells
@@ -181,7 +158,7 @@ namespace GameOfLife {
 					--Alive;
 					delta.Add(cell);
 				}
-			foreach (CellPoint cell in delta) UpdateNeighbors(cell._x, cell._y, Properties.Settings.Default.ToroidalMode);
+			foreach (CellPoint cell in delta) UpdateNeighbors(cell._x, cell._y);
 
 			// Increment generation count
 			++Generation;

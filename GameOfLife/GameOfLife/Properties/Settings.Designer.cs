@@ -37,7 +37,7 @@ namespace GameOfLife.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
         public int UniverseWidthCellCount {
             get {
                 return ((int)(this["UniverseWidthCellCount"]));
@@ -49,7 +49,7 @@ namespace GameOfLife.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
         public int UniverseHeightCellCount {
             get {
                 return ((int)(this["UniverseHeightCellCount"]));
@@ -77,6 +77,30 @@ namespace GameOfLife.Properties {
             }
             set {
                 this["ToroidalMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DisplayNeighborCount {
+            get {
+                return ((bool)(this["DisplayNeighborCount"]));
+            }
+            set {
+                this["DisplayNeighborCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DisplayGrid {
+            get {
+                return ((bool)(this["DisplayGrid"]));
+            }
+            set {
+                this["DisplayGrid"] = value;
             }
         }
     }

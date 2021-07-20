@@ -11,7 +11,13 @@ using System.Windows.Forms;
 
 namespace GameOfLife {
 	public partial class Form1 : Form {
-		
+
+		// Local runtime properties
+		int seed = DateTime.Now.Millisecond * DateTime.Now.Second * DateTime.Now.Minute;
+		bool isTorodial = Properties.Settings.Default.ToroidalMode;
+		bool displayNeighborCount = Properties.Settings.Default.DisplayNeighborCount;
+		bool displayGrid = Properties.Settings.Default.DisplayGrid;
+
 		// Drawing colors
 		Color gridColor = Color.Black;
 		Color cellColor = Color.LightGray;
@@ -24,10 +30,16 @@ namespace GameOfLife {
 		StringFormat format = new StringFormat(StringFormat.GenericDefault);
 
 		// The Timer class
-		GameTimer timer = new GameTimer();
+		GraphicsTimer timer = new GraphicsTimer();
 
 		public Form1() {
 			InitializeComponent();
+			if (isTorodial)
+				toroidalToolStripMenuItem_Click(this, EventArgs.Empty);
+			else
+				finiteToolStripMenuItem_Click(this, EventArgs.Empty);
+			neighborCountToolStripMenuItem.Checked = displayNeighborCount;
+			gridToolStripMenuItem.Checked = displayGrid;
 
 			// Setting up timer interval and speed
 			timer.Interval = 50;
@@ -57,9 +69,12 @@ namespace GameOfLife {
 
 			// Calculate the width and height of each cell in pixels
 			// CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
-			float cellWidth = Math.Max((float)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth, 38f);
+			float cellWidth = (float)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth;
+			cellWidth = Math.Max(cellWidth, graphicsPanel1.ClientSize.Width * 0.066f);
 			// CELL HEIGHT = WINDOW HEIGHT / NUMBER OF CELLS IN Y
-			float cellHeight = Math.Max((float)graphicsPanel1.ClientSize.Height / Program.ModelInstance.GridHeight, 20f);
+			float cellHeight = (float)graphicsPanel1.ClientSize.Height / Program.ModelInstance.GridHeight;
+			cellHeight = Math.Max(cellHeight, graphicsPanel1.ClientSize.Height * 0.041f);
+
 			graphicsPanel1.AutoScrollMinSize = new SizeF(cellWidth * Program.ModelInstance.GridWidth, cellHeight * Program.ModelInstance.GridHeight).ToSize();
 
 			// Iterate through the universe
@@ -70,37 +85,41 @@ namespace GameOfLife {
 				cellRect.Width = cellWidth;
 				cellRect.Height = cellHeight;
 
-				if (cell._isAlive == true)
-					e.Graphics.FillRectangle(cellBrush, cellRect);
+				if (e.Graphics.IsVisible(cellRect)) {
+					if (cell._isAlive == true)
+						e.Graphics.FillRectangle(cellBrush, cellRect);
 
-				if (0 != cell._neighbors) {
-					if (!cell._isAlive && 3 == cell._neighbors)
-						cellBrush.Color = Color.Green;
-					else if ((cell._isAlive && cell._neighbors < 2) || (cell._isAlive && 3 < cell._neighbors))
-						cellBrush.Color = Color.Red;
-					else
-						cellBrush.Color = cell._isAlive ? Color.Green : Color.Red;
-					graphicsPanel1.Font = new Font(Font.FontFamily, cellHeight, GraphicsUnit.Pixel);
-					e.Graphics.DrawString(cell._neighbors.ToString(), graphicsPanel1.Font, cellBrush, cellRect, format);
-					cellBrush.Color = cellColor;
+					if (0 != cell._neighbors && displayNeighborCount) {
+						if (!cell._isAlive && 3 == cell._neighbors)
+							cellBrush.Color = Color.Green;
+						else if ((cell._isAlive && cell._neighbors < 2) || (cell._isAlive && 3 < cell._neighbors))
+							cellBrush.Color = Color.Red;
+						else
+							cellBrush.Color = cell._isAlive ? Color.Green : Color.Red;
+						graphicsPanel1.Font = new Font(Font.FontFamily, cellHeight, GraphicsUnit.Pixel);
+						e.Graphics.DrawString(cell._neighbors.ToString(), graphicsPanel1.Font, cellBrush, cellRect, format);
+						cellBrush.Color = cellColor;
+					}
 				}
 			}
 
-			// Drawing the Y-axis grid lines
-			for (int y = 1; y < Properties.Settings.Default.UniverseHeightCellCount; ++y) {
-				gridPen.Width = (0 == y % 10) ? 2 : 1;
-				e.Graphics.DrawLine(gridPen, 0, y * cellHeight, cellWidth * Properties.Settings.Default.UniverseWidthCellCount, y * cellHeight);
-			}
+			if (displayGrid) {
+				// Drawing the Y-axis grid lines
+				for (int y = 1; y < Properties.Settings.Default.UniverseHeightCellCount; ++y) {
+					gridPen.Width = (0 == y % 10) ? 2 : 1;
+					e.Graphics.DrawLine(gridPen, 0, y * cellHeight, cellWidth * Properties.Settings.Default.UniverseWidthCellCount, y * cellHeight);
+				}
 
-			// Drawing the X-axis grid lines
-			for (int x = 1; x < Properties.Settings.Default.UniverseWidthCellCount; ++x) {
-				gridPen.Width = (0 == x % 10) ? 2 : 1;
-				e.Graphics.DrawLine(gridPen, x * cellWidth, 0, x * cellWidth, cellHeight * Properties.Settings.Default.UniverseHeightCellCount);
-			}
+				// Drawing the X-axis grid lines
+				for (int x = 1; x < Properties.Settings.Default.UniverseWidthCellCount; ++x) {
+					gridPen.Width = (0 == x % 10) ? 2 : 1;
+					e.Graphics.DrawLine(gridPen, x * cellWidth, 0, x * cellWidth, cellHeight * Properties.Settings.Default.UniverseHeightCellCount);
+				}
 
-			// Drawing enclosing rectangle
-			gridPen.Width = 4;
-			e.Graphics.DrawRectangle(gridPen, 0, 0, cellWidth * Properties.Settings.Default.UniverseWidthCellCount, cellHeight * Properties.Settings.Default.UniverseHeightCellCount);
+				// Drawing enclosing rectangle
+				gridPen.Width = 4;
+				e.Graphics.DrawRectangle(gridPen, 0, 0, cellWidth * Properties.Settings.Default.UniverseWidthCellCount, cellHeight * Properties.Settings.Default.UniverseHeightCellCount);
+			}
 
 			// Update status strip generations
 			toolStripStatusLabelGenerations.Text = $"Generations: {Program.ModelInstance.Generation} Interval: {timer.Interval} Alive: {Program.ModelInstance.Alive} Seed: {Properties.Settings.Default.Seed}";
@@ -132,6 +151,9 @@ namespace GameOfLife {
 		}
 
 		private void playToolStripButton_Click(object sender, EventArgs e) {
+			playToolStripButton.Enabled = playToolStripMenuItem.Enabled = false;
+			stepToolStripButton.Enabled = stepToolStripMenuItem.Enabled = false;
+			pauseToolStripButton.Enabled = pauseToolStripMenuItem.Enabled = true;
 			timer.Enabled = true;
 		}
 
@@ -141,15 +163,96 @@ namespace GameOfLife {
 
 		private void pauseToolStripButton_Click(object sender, EventArgs e) {
 			timer.Enabled = false;
+			pauseToolStripButton.Enabled = pauseToolStripMenuItem.Enabled = false;
+			playToolStripButton.Enabled = playToolStripMenuItem.Enabled = true;
+			stepToolStripButton.Enabled = stepToolStripMenuItem.Enabled = true;
 		}
 
 		private void newToolStripButton_Click(object sender, EventArgs e) {
+			pauseToolStripButton_Click(sender, e);
 			Program.ModelInstance.Reset();
 			graphicsPanel1.Invalidate();
 		}
 
+		private void toToolStripMenuItem_Click(object sender, EventArgs e) {
+			// TODO: modal dialog box
+		}
+
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
 			Close();
+		}
+
+		private void hUDToolStripMenuItem_Click(object sender, EventArgs e) {
+			hUDToolStripMenuItem.Checked = !hUDToolStripMenuItem.Checked;
+			// TODO: add drawing in paint method
+		}
+
+		private void neighborCountToolStripMenuItem_Click(object sender, EventArgs e) {
+			neighborCountToolStripMenuItem.Checked = !neighborCountToolStripMenuItem.Checked;
+			displayNeighborCount = !displayNeighborCount;
+			graphicsPanel1.Invalidate();
+		}
+
+		private void gridToolStripMenuItem_Click(object sender, EventArgs e) {
+			gridToolStripMenuItem.Checked = !gridToolStripMenuItem.Checked;
+			displayGrid = !displayGrid;
+			graphicsPanel1.Invalidate();
+		}
+
+		private void toroidalToolStripMenuItem_Click(object sender, EventArgs e) {
+			if (!toroidalToolStripMenuItem.Checked) {
+				bool timerState = timer.Enabled;
+				if (timerState) pauseToolStripButton_Click(sender, e);
+				toroidalToolStripMenuItem.Checked = true;
+				finiteToolStripMenuItem.Checked = false;
+				Program.ModelInstance.IsToroidal = true;
+				if (timerState) playToolStripButton_Click(sender, e);
+				graphicsPanel1.Invalidate();
+			}
+		}
+
+		private void finiteToolStripMenuItem_Click(object sender, EventArgs e) {
+			if (!finiteToolStripMenuItem.Checked) {
+				bool timerState = timer.Enabled;
+				if (timerState) pauseToolStripButton_Click(sender, e);
+				finiteToolStripMenuItem.Checked = true;
+				toroidalToolStripMenuItem.Checked = false;
+				Program.ModelInstance.IsToroidal = false;
+				if (timerState) playToolStripButton_Click(sender, e);
+				graphicsPanel1.Invalidate();
+			}
+		}
+
+		private void fromSeedToolStripMenuItem_Click(object sender, EventArgs e) {
+			// TODO: dialog box
+		}
+
+		private void fromCurrentSeedToolStripMenuItem_Click(object sender, EventArgs e) {
+			Program.ModelInstance.Reset();
+			Program.ModelInstance.GenerateCells(seed);
+			graphicsPanel1.Invalidate();
+		}
+
+		private void fromTimeToolStripMenuItem_Click(object sender, EventArgs e) {
+			Program.ModelInstance.Reset();
+			Program.ModelInstance.GenerateCells(DateTime.Now.Millisecond * DateTime.Now.Second * DateTime.Now.Minute);
+			graphicsPanel1.Invalidate();
+		}
+
+		private void resetToolStripMenuItem_Click(object sender, EventArgs e) {
+			Properties.Settings.Default.Reset();
+		}
+
+		private void reloadToolStripMenuItem_Click(object sender, EventArgs e) {
+			Properties.Settings.Default.Reload();
+		}
+
+		private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
+			//
+		}
+
+		private void Form1_FormClosed(object sender, FormClosedEventArgs e) {
+			Properties.Settings.Default.Save();
 		}
 	}
 }

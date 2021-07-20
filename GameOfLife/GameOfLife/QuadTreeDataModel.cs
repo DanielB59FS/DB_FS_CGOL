@@ -11,6 +11,7 @@ namespace GameOfLife {
 		private QuadTree<RectangleBoundary, CellPoint> _universe = null;
 		private QuadTree<RectangleBoundary, CellPoint> _sketch = null;
 
+		public bool IsToroidal { get; set; }
 		public int GridWidth { get; set; }
 		public int GridHeight { get; set; }
 
@@ -47,7 +48,7 @@ namespace GameOfLife {
 			foreach (CellPoint cell in cells) if (cell._isAlive) ++selectedCell._neighbors;
 		}
 
-		public void UpdateNeighbors(int x, int y, bool toroidal) {
+		public void UpdateNeighbors(int x, int y) {
 			//
 		}
 

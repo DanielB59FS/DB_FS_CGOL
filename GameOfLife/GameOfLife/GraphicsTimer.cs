@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GameOfLife {
-	class GameTimer : Timer {
+	class GraphicsTimer : Timer {
 		public void Step() {
 			OnTick(EventArgs.Empty);
-		}
-		protected override void OnTick(EventArgs e) {
-			base.OnTick(e);
 		}
 	}
 }
