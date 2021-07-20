@@ -30,7 +30,7 @@ namespace GameOfLife {
 			InitializeComponent();
 
 			// Setting up timer interval and speed
-			timer.Interval = 100;
+			timer.Interval = 50;
 			timer.Tick += Timer_Tick;
 
 			// A Pen for drawing the grid lines (color, width)
@@ -41,6 +41,7 @@ namespace GameOfLife {
 
 			// A string format for aligning cells text
 			format.Alignment = StringAlignment.Center;
+			format.LineAlignment = StringAlignment.Center;
 		}
 
 		// The event called by the timer every Interval milliseconds.
@@ -50,12 +51,16 @@ namespace GameOfLife {
 		}
 
 		private void graphicsPanel1_Paint(object sender, PaintEventArgs e) {
-			
+
+			// Translating panel scroll position
+			e.Graphics.TranslateTransform(graphicsPanel1.AutoScrollPosition.X, graphicsPanel1.AutoScrollPosition.Y);
+
 			// Calculate the width and height of each cell in pixels
 			// CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
-			float cellWidth = (float)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth;
+			float cellWidth = Math.Max((float)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth, 38f);
 			// CELL HEIGHT = WINDOW HEIGHT / NUMBER OF CELLS IN Y
-			float cellHeight = (float)graphicsPanel1.ClientSize.Height / Program.ModelInstance.GridHeight;
+			float cellHeight = Math.Max((float)graphicsPanel1.ClientSize.Height / Program.ModelInstance.GridHeight, 20f);
+			graphicsPanel1.AutoScrollMinSize = new SizeF(cellWidth * Program.ModelInstance.GridWidth, cellHeight * Program.ModelInstance.GridHeight).ToSize();
 
 			// Iterate through the universe
 			foreach (CellPoint cell in Program.ModelInstance) {
@@ -84,18 +89,18 @@ namespace GameOfLife {
 			// Drawing the Y-axis grid lines
 			for (int y = 1; y < Properties.Settings.Default.UniverseHeightCellCount; ++y) {
 				gridPen.Width = (0 == y % 10) ? 2 : 1;
-				e.Graphics.DrawLine(gridPen, 0, y * cellHeight, graphicsPanel1.Width, y * cellHeight);
+				e.Graphics.DrawLine(gridPen, 0, y * cellHeight, cellWidth * Properties.Settings.Default.UniverseWidthCellCount, y * cellHeight);
 			}
 
 			// Drawing the X-axis grid lines
 			for (int x = 1; x < Properties.Settings.Default.UniverseWidthCellCount; ++x) {
 				gridPen.Width = (0 == x % 10) ? 2 : 1;
-				e.Graphics.DrawLine(gridPen, x * cellWidth, 0, x * cellWidth, graphicsPanel1.Height);
+				e.Graphics.DrawLine(gridPen, x * cellWidth, 0, x * cellWidth, cellHeight * Properties.Settings.Default.UniverseHeightCellCount);
 			}
 
 			// Drawing enclosing rectangle
 			gridPen.Width = 4;
-			e.Graphics.DrawRectangle(gridPen, 0, 0, graphicsPanel1.Width, graphicsPanel1.Height);
+			e.Graphics.DrawRectangle(gridPen, 0, 0, cellWidth * Properties.Settings.Default.UniverseWidthCellCount, cellHeight * Properties.Settings.Default.UniverseHeightCellCount);
 
 			// Update status strip generations
 			toolStripStatusLabelGenerations.Text = $"Generations: {Program.ModelInstance.Generation} Interval: {timer.Interval} Alive: {Program.ModelInstance.Alive} Seed: {Properties.Settings.Default.Seed}";
@@ -105,15 +110,19 @@ namespace GameOfLife {
 			// If the left mouse button was clicked
 			if (e.Button == MouseButtons.Left) {
 				// Calculate the width and height of each cell in pixels
-				float cellWidth = (float)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth;
-				float cellHeight = (float)graphicsPanel1.ClientSize.Height / Program.ModelInstance.GridHeight;
+				float cellWidth = Math.Max((float)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth, 38f);
+				float cellHeight = Math.Max((float)graphicsPanel1.ClientSize.Height / Program.ModelInstance.GridHeight, 20f);
 
 				// Calculate the cell that was clicked in
 				// CELL X = MOUSE X / CELL WIDTH
-				float x = e.X / cellWidth;
+				float x = (e.X - graphicsPanel1.AutoScrollPosition.X) / cellWidth;
 				// CELL Y = MOUSE Y / CELL HEIGHT
-				float y = e.Y / cellHeight;
+				float y = (e.Y - graphicsPanel1.AutoScrollPosition.Y) / cellHeight;
 
+				if (0 != graphicsPanel1.AutoScrollPosition.X || 0 != graphicsPanel1.AutoScrollPosition.Y) {
+					int h = 0;
+					++h;
+				}
 				// Toggle the cell's state
 				Program.ModelInstance.ToggleCell((int)x, (int)y);
 
@@ -140,7 +149,7 @@ namespace GameOfLife {
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
-			Application.Exit();
+			Close();
 		}
 	}
 }

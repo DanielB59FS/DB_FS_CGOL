@@ -16,5 +16,6 @@ namespace GameOfLife {
 		void UpdateNeighbors(int x, int y, bool toroidal);
 		void ToggleCell(int x, int y);
 		void NextGeneration();
+		void GenerateCells(int seed);
 	}
 }

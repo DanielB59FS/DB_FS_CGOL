@@ -37,7 +37,7 @@ namespace GameOfLife.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
         public int UniverseWidthCellCount {
             get {
                 return ((int)(this["UniverseWidthCellCount"]));
@@ -49,7 +49,7 @@ namespace GameOfLife.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
         public int UniverseHeightCellCount {
             get {
                 return ((int)(this["UniverseHeightCellCount"]));

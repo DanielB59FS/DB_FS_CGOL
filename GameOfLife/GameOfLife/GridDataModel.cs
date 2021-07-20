@@ -19,7 +19,8 @@ namespace GameOfLife {
 		public GridDataModel(int n, int m) {
 			GridWidth = n;
 			GridHeight = m;
-			Reset();
+			//Reset();
+			GenerateCells(Properties.Settings.Default.Seed);
 		}
 
 		public void Reset() {
@@ -39,7 +40,20 @@ namespace GameOfLife {
 
 		public void GenerateCells(int seed) {
 			Random prng = new Random(seed);
-			// TODO: implement
+
+			Reset();
+
+			List<CellPoint> delta = new List<CellPoint>();
+			foreach (CellPoint cell in _universe) {
+				if (0 == prng.Next(2)) {
+					cell._isAlive = true;
+					++Alive;
+					delta.Add(cell);
+				}
+				else
+					cell._isAlive = false;
+			}
+			foreach (CellPoint cell in delta) UpdateNeighbors(cell._x, cell._y, Properties.Settings.Default.ToroidalMode);
 		}
 
 		public void CountNeighborsFinite(int x, int y) {
