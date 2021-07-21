@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="UniverseWidthCellCount" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">15</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="UniverseHeightCellCount" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">15</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="QuadTreeModel" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -21,7 +21,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="Inverval" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">100</Value>
+      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="BackColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Window</Value>

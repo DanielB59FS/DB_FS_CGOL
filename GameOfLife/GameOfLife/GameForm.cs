@@ -131,10 +131,18 @@ namespace GameOfLife {
 					}
 				}
 			}
+			gridPen.Color = Color.Red;
+			e.Graphics.DrawRectangle(gridPen, new Rectangle(-graphicsPanel1.AutoScrollPosition.X, -graphicsPanel1.AutoScrollPosition.Y, 20, 20));
 
 			if (displayGrid) {
 				gridPen.Color = gridColor;
 				// Drawing the Y-axis grid lines
+				//for (int y = 1; y < graphicsPanel1.ClientSize.Height / cellHeight; ++y) {
+				//	gridPen.Width = (0 == y % 10) ? 2 : 1;
+				//	gridPen.Color = (0 == y % 10) ? grid10Color : gridColor;
+				//	e.Graphics.DrawLine(gridPen, -graphicsPanel1.AutoScrollPosition.X, y * cellHeight, cellWidth, y * cellHeight);
+				//}
+				// TODO: looking into partial drawing
 				for (int y = 1; y < Program.ModelInstance.GridHeight; ++y) {
 					gridPen.Width = (0 == y % 10) ? 2 : 1;
 					gridPen.Color = (0 == y % 10) ? grid10Color : gridColor;
@@ -162,8 +170,10 @@ namespace GameOfLife {
 			// If the left mouse button was clicked
 			if (e.Button == MouseButtons.Left) {
 				// Calculate the width and height of each cell in pixels
-				float cellWidth = Math.Max((float)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth, 38f);
-				float cellHeight = Math.Max((float)graphicsPanel1.ClientSize.Height / Program.ModelInstance.GridHeight, 20f);
+				float cellWidth = (float)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth;
+				cellWidth = Math.Max(cellWidth, graphicsPanel1.ClientSize.Width * 0.066f);
+				float cellHeight = (float)graphicsPanel1.ClientSize.Height / Program.ModelInstance.GridHeight;
+				cellHeight = Math.Max(cellHeight, graphicsPanel1.ClientSize.Height * 0.041f);
 
 				// Calculate the cell that was clicked in
 				// CELL X = MOUSE X / CELL WIDTH
