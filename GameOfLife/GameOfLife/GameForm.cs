@@ -10,24 +10,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GameOfLife {
-	public partial class Form1 : Form {
+	public partial class GameForm : Form {
 
 		// Local runtime properties
 		int seed;
 
 		bool isQuadTree;
-		bool isTorodial;
 		bool Toroidal {
-			get => isTorodial;
-			set {
-				isTorodial = value;
-				if (isTorodial)
-					toroidalToolStripMenuItem_Click(this, EventArgs.Empty);
-				else
-					finiteToolStripMenuItem_Click(this, EventArgs.Empty);
-				neighborCountToolStripMenuItem.Checked = displayNeighborCount;
-				gridToolStripMenuItem.Checked = displayGrid;
-			}
+			get => Program.ModelInstance.IsToroidal;
+			set => Program.ModelInstance.IsToroidal = value;
 		}
 		bool displayNeighborCount;
 		bool displayGrid;
@@ -58,11 +49,16 @@ namespace GameOfLife {
 			Toroidal = Properties.Settings.Default.ToroidalMode;
 		}
 
-		public Form1() {
+		public GameForm() {
 			InitializeComponent();
 
 			ReadProperties();
 			Program.ModelInstance.Reset();
+
+			neighborCountToolStripMenuItem.Checked = displayNeighborCount;
+			gridToolStripMenuItem.Checked = displayGrid;
+			toroidalToolStripMenuItem.Checked = Toroidal;
+			finiteToolStripMenuItem.Checked = !Toroidal;
 
 			// Setting up timer interval and speed
 			timer.Tick += Timer_Tick;
@@ -227,7 +223,7 @@ namespace GameOfLife {
 				if (timerState) pauseToolStripButton_Click(sender, e);
 				toroidalToolStripMenuItem.Checked = true;
 				finiteToolStripMenuItem.Checked = false;
-				Program.ModelInstance.IsToroidal = true;
+				Toroidal = true;
 				if (timerState) playToolStripButton_Click(sender, e);
 				graphicsPanel1.Invalidate();
 			}
@@ -239,14 +235,26 @@ namespace GameOfLife {
 				if (timerState) pauseToolStripButton_Click(sender, e);
 				finiteToolStripMenuItem.Checked = true;
 				toroidalToolStripMenuItem.Checked = false;
-				Program.ModelInstance.IsToroidal = false;
+				Toroidal = false;
 				if (timerState) playToolStripButton_Click(sender, e);
 				graphicsPanel1.Invalidate();
 			}
 		}
 
 		private void fromSeedToolStripMenuItem_Click(object sender, EventArgs e) {
-			// TODO: dialog box
+			SeedDialog sdlg = new SeedDialog();
+			
+			sdlg.Seed = seed;
+			sdlg.ShowDialog();
+
+			if (DialogResult.OK == sdlg.DialogResult) {
+				seed = (int)sdlg.Seed;
+				Program.ModelInstance.Reset();
+				Program.ModelInstance.GenerateCells(seed);
+				graphicsPanel1.Invalidate();
+			}
+
+			sdlg.Dispose();
 		}
 
 		private void fromCurrentSeedToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -256,8 +264,9 @@ namespace GameOfLife {
 		}
 
 		private void fromTimeToolStripMenuItem_Click(object sender, EventArgs e) {
+			seed = DateTime.Now.Millisecond * DateTime.Now.Second * DateTime.Now.Minute;
 			Program.ModelInstance.Reset();
-			Program.ModelInstance.GenerateCells(DateTime.Now.Millisecond * DateTime.Now.Second * DateTime.Now.Minute);
+			Program.ModelInstance.GenerateCells(seed);
 			graphicsPanel1.Invalidate();
 		}
 

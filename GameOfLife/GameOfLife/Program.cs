@@ -28,7 +28,7 @@ namespace GameOfLife {
 			//Properties.Settings.Default.Seed = DateTime.Now.Millisecond * DateTime.Now.Second;
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new Form1());
+			Application.Run(new GameForm());
 		}
 	}
 }
