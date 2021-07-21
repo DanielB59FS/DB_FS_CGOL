@@ -2,16 +2,13 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="GameOfLife.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Seed" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
     <Setting Name="UniverseWidthCellCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">15</Value>
     </Setting>
     <Setting Name="UniverseHeightCellCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">15</Value>
     </Setting>
-    <Setting Name="QuadTreeModel" Type="System.Boolean" Scope="Application">
+    <Setting Name="QuadTreeModel" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ToroidalMode" Type="System.Boolean" Scope="User">
@@ -22,6 +19,9 @@
     </Setting>
     <Setting Name="DisplayGrid" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Inverval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
     </Setting>
   </Settings>
 </SettingsFile>

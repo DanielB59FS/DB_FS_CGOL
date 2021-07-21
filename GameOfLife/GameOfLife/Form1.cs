@@ -13,10 +13,24 @@ namespace GameOfLife {
 	public partial class Form1 : Form {
 
 		// Local runtime properties
-		int seed = DateTime.Now.Millisecond * DateTime.Now.Second * DateTime.Now.Minute;
-		bool isTorodial = Properties.Settings.Default.ToroidalMode;
-		bool displayNeighborCount = Properties.Settings.Default.DisplayNeighborCount;
-		bool displayGrid = Properties.Settings.Default.DisplayGrid;
+		int seed;
+
+		bool isQuadTree;
+		bool isTorodial;
+		bool Toroidal {
+			get => isTorodial;
+			set {
+				isTorodial = value;
+				if (isTorodial)
+					toroidalToolStripMenuItem_Click(this, EventArgs.Empty);
+				else
+					finiteToolStripMenuItem_Click(this, EventArgs.Empty);
+				neighborCountToolStripMenuItem.Checked = displayNeighborCount;
+				gridToolStripMenuItem.Checked = displayGrid;
+			}
+		}
+		bool displayNeighborCount;
+		bool displayGrid;
 
 		// Drawing colors
 		Color gridColor = Color.Black;
@@ -32,17 +46,25 @@ namespace GameOfLife {
 		// The Timer class
 		GraphicsTimer timer = new GraphicsTimer();
 
+		private void ReadProperties() {
+			displayNeighborCount = Properties.Settings.Default.DisplayNeighborCount;
+			displayGrid = Properties.Settings.Default.DisplayGrid;
+			timer.Interval = Properties.Settings.Default.Inverval;
+			seed = DateTime.Now.Millisecond * DateTime.Now.Second * DateTime.Now.Minute;
+
+			isQuadTree = Properties.Settings.Default.QuadTreeModel;
+			Program.ModelInstance.GridWidth = Properties.Settings.Default.UniverseWidthCellCount;
+			Program.ModelInstance.GridHeight = Properties.Settings.Default.UniverseHeightCellCount;
+			Toroidal = Properties.Settings.Default.ToroidalMode;
+		}
+
 		public Form1() {
 			InitializeComponent();
-			if (isTorodial)
-				toroidalToolStripMenuItem_Click(this, EventArgs.Empty);
-			else
-				finiteToolStripMenuItem_Click(this, EventArgs.Empty);
-			neighborCountToolStripMenuItem.Checked = displayNeighborCount;
-			gridToolStripMenuItem.Checked = displayGrid;
+
+			ReadProperties();
+			Program.ModelInstance.Reset();
 
 			// Setting up timer interval and speed
-			timer.Interval = 50;
 			timer.Tick += Timer_Tick;
 
 			// A Pen for drawing the grid lines (color, width)
@@ -105,24 +127,24 @@ namespace GameOfLife {
 
 			if (displayGrid) {
 				// Drawing the Y-axis grid lines
-				for (int y = 1; y < Properties.Settings.Default.UniverseHeightCellCount; ++y) {
+				for (int y = 1; y < Program.ModelInstance.GridHeight; ++y) {
 					gridPen.Width = (0 == y % 10) ? 2 : 1;
-					e.Graphics.DrawLine(gridPen, 0, y * cellHeight, cellWidth * Properties.Settings.Default.UniverseWidthCellCount, y * cellHeight);
+					e.Graphics.DrawLine(gridPen, 0, y * cellHeight, cellWidth * Program.ModelInstance.GridWidth, y * cellHeight);
 				}
 
 				// Drawing the X-axis grid lines
-				for (int x = 1; x < Properties.Settings.Default.UniverseWidthCellCount; ++x) {
+				for (int x = 1; x < Program.ModelInstance.GridWidth; ++x) {
 					gridPen.Width = (0 == x % 10) ? 2 : 1;
-					e.Graphics.DrawLine(gridPen, x * cellWidth, 0, x * cellWidth, cellHeight * Properties.Settings.Default.UniverseHeightCellCount);
+					e.Graphics.DrawLine(gridPen, x * cellWidth, 0, x * cellWidth, cellHeight * Program.ModelInstance.GridHeight);
 				}
 
 				// Drawing enclosing rectangle
 				gridPen.Width = 4;
-				e.Graphics.DrawRectangle(gridPen, 0, 0, cellWidth * Properties.Settings.Default.UniverseWidthCellCount, cellHeight * Properties.Settings.Default.UniverseHeightCellCount);
+				e.Graphics.DrawRectangle(gridPen, 0, 0, cellWidth * Program.ModelInstance.GridWidth, cellHeight * Program.ModelInstance.GridHeight);
 			}
 
 			// Update status strip generations
-			toolStripStatusLabelGenerations.Text = $"Generations: {Program.ModelInstance.Generation} Interval: {timer.Interval} Alive: {Program.ModelInstance.Alive} Seed: {Properties.Settings.Default.Seed}";
+			toolStripStatusLabelGenerations.Text = $"Generations: {Program.ModelInstance.Generation} Interval: {timer.Interval} Alive: {Program.ModelInstance.Alive} Seed: {seed}";
 		}
 
 		private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e) {
@@ -241,10 +263,12 @@ namespace GameOfLife {
 
 		private void resetToolStripMenuItem_Click(object sender, EventArgs e) {
 			Properties.Settings.Default.Reset();
+			ReadProperties();
 		}
 
 		private void reloadToolStripMenuItem_Click(object sender, EventArgs e) {
 			Properties.Settings.Default.Reload();
+			ReadProperties();
 		}
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
@@ -252,6 +276,15 @@ namespace GameOfLife {
 		}
 
 		private void Form1_FormClosed(object sender, FormClosedEventArgs e) {
+			Properties.Settings.Default.DisplayNeighborCount = displayNeighborCount;
+			Properties.Settings.Default.DisplayGrid = displayGrid;
+			Properties.Settings.Default.Inverval = timer.Interval;
+
+			Properties.Settings.Default.QuadTreeModel = isQuadTree;
+			Properties.Settings.Default.UniverseWidthCellCount = Program.ModelInstance.GridWidth;
+			Properties.Settings.Default.UniverseHeightCellCount = Program.ModelInstance.GridHeight;
+			Properties.Settings.Default.ToroidalMode = Toroidal;
+
 			Properties.Settings.Default.Save();
 		}
 	}

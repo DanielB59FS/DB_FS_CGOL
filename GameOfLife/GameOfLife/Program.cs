@@ -13,9 +13,9 @@ namespace GameOfLife {
 			get {
 				if (null == _model)
 					if (Properties.Settings.Default.QuadTreeModel)
-						_model = new QuadTreeDataModel(Properties.Settings.Default.UniverseWidthCellCount, Properties.Settings.Default.UniverseHeightCellCount);
+						_model = null;// new QuadTreeDataModel();
 					else
-						_model = new GridDataModel(Properties.Settings.Default.UniverseWidthCellCount, Properties.Settings.Default.UniverseHeightCellCount);
+						_model = new GridDataModel();
 				return _model;
 			}
 		}

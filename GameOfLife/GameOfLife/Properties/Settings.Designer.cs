@@ -25,18 +25,6 @@ namespace GameOfLife.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int Seed {
-            get {
-                return ((int)(this["Seed"]));
-            }
-            set {
-                this["Seed"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("15")]
         public int UniverseWidthCellCount {
             get {
@@ -59,12 +47,15 @@ namespace GameOfLife.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool QuadTreeModel {
             get {
                 return ((bool)(this["QuadTreeModel"]));
+            }
+            set {
+                this["QuadTreeModel"] = value;
             }
         }
         
@@ -101,6 +92,18 @@ namespace GameOfLife.Properties {
             }
             set {
                 this["DisplayGrid"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int Inverval {
+            get {
+                return ((int)(this["Inverval"]));
+            }
+            set {
+                this["Inverval"] = value;
             }
         }
     }

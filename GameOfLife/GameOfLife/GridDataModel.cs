@@ -27,12 +27,6 @@ namespace GameOfLife {
 		public BigInteger Generation { get; set; } = 0;
 		public BigInteger Alive { get; set; } = 0;
 
-		public GridDataModel(int n, int m) {
-			GridWidth = n;
-			GridHeight = m;
-			Reset();
-		}
-
 		public void Reset() {
 			_universe = new CellPoint[GridWidth, GridHeight];
 
