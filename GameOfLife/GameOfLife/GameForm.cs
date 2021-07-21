@@ -24,8 +24,9 @@ namespace GameOfLife {
 		bool displayGrid;
 
 		// Drawing colors
-		Color gridColor = Color.Black;
-		Color cellColor = Color.LightGray;
+		Color cellColor;
+		Color gridColor;
+		Color grid10Color;
 
 		// Pen & Brush
 		Pen gridPen;
@@ -38,6 +39,11 @@ namespace GameOfLife {
 		GraphicsTimer timer = new GraphicsTimer();
 
 		private void ReadProperties() {
+			cellColor = Properties.Settings.Default.CellColor;
+			gridColor = Properties.Settings.Default.GridColor;
+			grid10Color = Properties.Settings.Default.Grid10Color;
+			graphicsPanel1.BackColor = Properties.Settings.Default.BackColor;
+
 			displayNeighborCount = Properties.Settings.Default.DisplayNeighborCount;
 			displayGrid = Properties.Settings.Default.DisplayGrid;
 			timer.Interval = Properties.Settings.Default.Inverval;
@@ -47,6 +53,10 @@ namespace GameOfLife {
 			Program.ModelInstance.GridWidth = Properties.Settings.Default.UniverseWidthCellCount;
 			Program.ModelInstance.GridHeight = Properties.Settings.Default.UniverseHeightCellCount;
 			Toroidal = Properties.Settings.Default.ToroidalMode;
+
+			WindowState = Properties.Settings.Default.WindowState;
+
+			graphicsPanel1.Invalidate();
 		}
 
 		public GameForm() {
@@ -104,8 +114,10 @@ namespace GameOfLife {
 				cellRect.Height = cellHeight;
 
 				if (e.Graphics.IsVisible(cellRect)) {
-					if (cell._isAlive == true)
+					if (cell._isAlive == true) {
+						cellBrush.Color = cellColor;
 						e.Graphics.FillRectangle(cellBrush, cellRect);
+					}
 
 					if (0 != cell._neighbors && displayNeighborCount) {
 						if (!cell._isAlive && 3 == cell._neighbors)
@@ -116,25 +128,28 @@ namespace GameOfLife {
 							cellBrush.Color = cell._isAlive ? Color.Green : Color.Red;
 						graphicsPanel1.Font = new Font(Font.FontFamily, cellHeight, GraphicsUnit.Pixel);
 						e.Graphics.DrawString(cell._neighbors.ToString(), graphicsPanel1.Font, cellBrush, cellRect, format);
-						cellBrush.Color = cellColor;
 					}
 				}
 			}
 
 			if (displayGrid) {
+				gridPen.Color = gridColor;
 				// Drawing the Y-axis grid lines
 				for (int y = 1; y < Program.ModelInstance.GridHeight; ++y) {
 					gridPen.Width = (0 == y % 10) ? 2 : 1;
+					gridPen.Color = (0 == y % 10) ? grid10Color : gridColor;
 					e.Graphics.DrawLine(gridPen, 0, y * cellHeight, cellWidth * Program.ModelInstance.GridWidth, y * cellHeight);
 				}
 
 				// Drawing the X-axis grid lines
 				for (int x = 1; x < Program.ModelInstance.GridWidth; ++x) {
 					gridPen.Width = (0 == x % 10) ? 2 : 1;
+					gridPen.Color = (0 == x % 10) ? grid10Color : gridColor;
 					e.Graphics.DrawLine(gridPen, x * cellWidth, 0, x * cellWidth, cellHeight * Program.ModelInstance.GridHeight);
 				}
 
 				// Drawing enclosing rectangle
+				gridPen.Color = grid10Color;
 				gridPen.Width = 4;
 				e.Graphics.DrawRectangle(gridPen, 0, 0, cellWidth * Program.ModelInstance.GridWidth, cellHeight * Program.ModelInstance.GridHeight);
 			}
@@ -242,19 +257,16 @@ namespace GameOfLife {
 		}
 
 		private void fromSeedToolStripMenuItem_Click(object sender, EventArgs e) {
-			SeedDialog sdlg = new SeedDialog();
-			
-			sdlg.Seed = seed;
-			sdlg.ShowDialog();
+			using (SeedDialog sdlg = new SeedDialog()) {
+				sdlg.Seed = seed;
 
-			if (DialogResult.OK == sdlg.DialogResult) {
-				seed = (int)sdlg.Seed;
-				Program.ModelInstance.Reset();
-				Program.ModelInstance.GenerateCells(seed);
-				graphicsPanel1.Invalidate();
+				if (DialogResult.OK == sdlg.ShowDialog()) {
+					seed = (int)sdlg.Seed;
+					Program.ModelInstance.Reset();
+					Program.ModelInstance.GenerateCells(seed);
+					graphicsPanel1.Invalidate();
+				}
 			}
-
-			sdlg.Dispose();
 		}
 
 		private void fromCurrentSeedToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -285,6 +297,11 @@ namespace GameOfLife {
 		}
 
 		private void Form1_FormClosed(object sender, FormClosedEventArgs e) {
+			Properties.Settings.Default.CellColor = cellColor;
+			Properties.Settings.Default.GridColor = gridColor;
+			Properties.Settings.Default.Grid10Color = grid10Color;
+			Properties.Settings.Default.BackColor = graphicsPanel1.BackColor;
+
 			Properties.Settings.Default.DisplayNeighborCount = displayNeighborCount;
 			Properties.Settings.Default.DisplayGrid = displayGrid;
 			Properties.Settings.Default.Inverval = timer.Interval;
@@ -294,7 +311,51 @@ namespace GameOfLife {
 			Properties.Settings.Default.UniverseHeightCellCount = Program.ModelInstance.GridHeight;
 			Properties.Settings.Default.ToroidalMode = Toroidal;
 
+			if (FormWindowState.Minimized != WindowState) Properties.Settings.Default.WindowState = WindowState;
+
 			Properties.Settings.Default.Save();
+		}
+
+		private void backColorToolStripMenuItem_Click(object sender, EventArgs e) {
+			using (ColorDialog cdlg = new ColorDialog()) {
+				cdlg.Color = graphicsPanel1.BackColor;
+
+				if (DialogResult.OK == cdlg.ShowDialog())
+					graphicsPanel1.BackColor = cdlg.Color;
+			}
+		}
+
+		private void cellColorToolStripMenuItem_Click(object sender, EventArgs e) {
+			using (ColorDialog cdlg = new ColorDialog()) {
+				cdlg.Color = cellColor;
+
+				if (DialogResult.OK == cdlg.ShowDialog())
+					cellColor = cdlg.Color;
+
+				graphicsPanel1.Invalidate();
+			}
+		}
+
+		private void gridColorToolStripMenuItem_Click(object sender, EventArgs e) {
+			using (ColorDialog cdlg = new ColorDialog()) {
+				cdlg.Color = gridColor;
+
+				if (DialogResult.OK == cdlg.ShowDialog())
+					gridColor = cdlg.Color;
+
+				graphicsPanel1.Invalidate();
+			}
+		}
+
+		private void gridX10ColorToolStripMenuItem_Click(object sender, EventArgs e) {
+			using (ColorDialog cdlg = new ColorDialog()) {
+				cdlg.Color = grid10Color;
+
+				if (DialogResult.OK == cdlg.ShowDialog())
+					grid10Color = cdlg.Color;
+
+				graphicsPanel1.Invalidate();
+			}
 		}
 	}
 }
