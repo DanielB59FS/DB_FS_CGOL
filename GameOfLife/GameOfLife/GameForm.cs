@@ -81,10 +81,6 @@ namespace GameOfLife {
 
 			// A Brush for filling living cells interiors (color)
 			cellBrush = new SolidBrush(cellColor);
-
-			// A string format for aligning cells text
-			format.Alignment = StringAlignment.Center;
-			format.LineAlignment = StringAlignment.Center;
 		}
 
 		// The event called by the timer every Interval milliseconds.
@@ -97,6 +93,10 @@ namespace GameOfLife {
 
 			// Translating panel scroll position
 			e.Graphics.TranslateTransform(graphicsPanel1.AutoScrollPosition.X, graphicsPanel1.AutoScrollPosition.Y);
+
+			// A string format for aligning cells text
+			format.Alignment = StringAlignment.Center;
+			format.LineAlignment = StringAlignment.Center;
 
 			// Calculate the width and height of each cell in pixels
 			// CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
@@ -134,7 +134,7 @@ namespace GameOfLife {
 					}
 				}
 			}
-			
+
 			if (displayGrid) {
 				gridPen.Color = gridColor;
 				// Drawing the X-axis grid lines
@@ -157,12 +157,26 @@ namespace GameOfLife {
 				e.Graphics.DrawRectangle(gridPen, 0, 0, cellWidth * Program.ModelInstance.GridWidth, cellHeight * Program.ModelInstance.GridHeight);
 			}
 
+			if (displayHUD) {
+				//cellBrush.Color = Color.FromArgb(0xFFFFFFF - BackColor.ToArgb());
+				cellBrush.Color = Color.FromArgb(127, 255, 0, 0);
+
+				// A string format for aligning cells text
+				format.Alignment = StringAlignment.Near;
+				format.LineAlignment = StringAlignment.Far;
+				hudLabel.Font = graphicsPanel1.Font;
+				hudLabel.ForeColor = Color.Transparent;
+
+				e.Graphics.DrawString(
+					$"Generations: {Program.ModelInstance.Generation}\n" +
+					$"Alive : {Program.ModelInstance.Alive}\n" +
+					$"Boundary Type: {(Toroidal ? "Toroidal" : "Finite")}\n" +
+					$"Universe Size: (Width: {Program.ModelInstance.GridWidth}, Height: {Program.ModelInstance.GridHeight})",
+					graphicsPanel1.Font, cellBrush, new RectangleF(-graphicsPanel1.AutoScrollPosition.X, -graphicsPanel1.AutoScrollPosition.Y, graphicsPanel1.Width, graphicsPanel1.Height - cellHeight), format);
+			}
+
 			// Update status strip generations
 			toolStripStatusLabelGenerations.Text = $"Generations: {Program.ModelInstance.Generation} Interval: {timer.Interval} Alive: {Program.ModelInstance.Alive} Seed: {seed}";
-		}
-
-		private void DrawGridLines(object sender, PaintEventArgs e) {
-			//
 		}
 
 		private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e) {

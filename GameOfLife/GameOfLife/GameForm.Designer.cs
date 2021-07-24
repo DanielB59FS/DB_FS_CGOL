@@ -85,10 +85,12 @@ namespace GameOfLife {
 			this.gridColorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.gridX10ColorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.graphicsPanel1 = new GameOfLife.GraphicsPanel();
+			this.hudLabel = new System.Windows.Forms.Label();
 			this.menuStrip1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.contextMenuStrip1.SuspendLayout();
+			this.graphicsPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -501,7 +503,7 @@ namespace GameOfLife {
             this.gridColorToolStripMenuItem1,
             this.gridX10ColorToolStripMenuItem1});
 			this.colorContextMenuItem.Name = "colorContextMenuItem";
-			this.colorContextMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.colorContextMenuItem.Size = new System.Drawing.Size(103, 22);
 			this.colorContextMenuItem.Text = "&Color";
 			// 
 			// viewContextMenuItem
@@ -517,49 +519,49 @@ namespace GameOfLife {
 			// hUDContextMenuItem
 			// 
 			this.hUDContextMenuItem.Name = "hUDContextMenuItem";
-			this.hUDContextMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.hUDContextMenuItem.Size = new System.Drawing.Size(160, 22);
 			this.hUDContextMenuItem.Text = "&HUD";
 			this.hUDContextMenuItem.Click += new System.EventHandler(this.hUDToolStripMenuItem_Click);
 			// 
 			// neighborCountContextMenuItem
 			// 
 			this.neighborCountContextMenuItem.Name = "neighborCountContextMenuItem";
-			this.neighborCountContextMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.neighborCountContextMenuItem.Size = new System.Drawing.Size(160, 22);
 			this.neighborCountContextMenuItem.Text = "&Neighbor Count";
 			this.neighborCountContextMenuItem.Click += new System.EventHandler(this.neighborCountToolStripMenuItem_Click);
 			// 
 			// gridContextMenuItem
 			// 
 			this.gridContextMenuItem.Name = "gridContextMenuItem";
-			this.gridContextMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.gridContextMenuItem.Size = new System.Drawing.Size(160, 22);
 			this.gridContextMenuItem.Text = "&Grid";
 			this.gridContextMenuItem.Click += new System.EventHandler(this.gridToolStripMenuItem_Click);
 			// 
 			// backColorToolStripMenuItem1
 			// 
 			this.backColorToolStripMenuItem1.Name = "backColorToolStripMenuItem1";
-			this.backColorToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+			this.backColorToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
 			this.backColorToolStripMenuItem1.Text = "&Back Color";
 			this.backColorToolStripMenuItem1.Click += new System.EventHandler(this.backColorToolStripMenuItem_Click);
 			// 
 			// cellColorToolStripMenuItem1
 			// 
 			this.cellColorToolStripMenuItem1.Name = "cellColorToolStripMenuItem1";
-			this.cellColorToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+			this.cellColorToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
 			this.cellColorToolStripMenuItem1.Text = "&Cell Color";
 			this.cellColorToolStripMenuItem1.Click += new System.EventHandler(this.cellColorToolStripMenuItem_Click);
 			// 
 			// gridColorToolStripMenuItem1
 			// 
 			this.gridColorToolStripMenuItem1.Name = "gridColorToolStripMenuItem1";
-			this.gridColorToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+			this.gridColorToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
 			this.gridColorToolStripMenuItem1.Text = "&Grid Color";
 			this.gridColorToolStripMenuItem1.Click += new System.EventHandler(this.gridColorToolStripMenuItem_Click);
 			// 
 			// gridX10ColorToolStripMenuItem1
 			// 
 			this.gridX10ColorToolStripMenuItem1.Name = "gridX10ColorToolStripMenuItem1";
-			this.gridX10ColorToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+			this.gridX10ColorToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
 			this.gridX10ColorToolStripMenuItem1.Text = "G&rid x10 Color";
 			this.gridX10ColorToolStripMenuItem1.Click += new System.EventHandler(this.gridX10ColorToolStripMenuItem_Click);
 			// 
@@ -568,6 +570,7 @@ namespace GameOfLife {
 			this.graphicsPanel1.AutoScroll = true;
 			this.graphicsPanel1.BackColor = System.Drawing.SystemColors.Window;
 			this.graphicsPanel1.ContextMenuStrip = this.contextMenuStrip1;
+			this.graphicsPanel1.Controls.Add(this.hudLabel);
 			this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.graphicsPanel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.graphicsPanel1.Location = new System.Drawing.Point(0, 49);
@@ -576,6 +579,18 @@ namespace GameOfLife {
 			this.graphicsPanel1.TabIndex = 3;
 			this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.graphicsPanel1_Paint);
 			this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
+			// 
+			// hudLabel
+			// 
+			this.hudLabel.AutoSize = true;
+			this.hudLabel.BackColor = System.Drawing.Color.Transparent;
+			this.hudLabel.ForeColor = System.Drawing.Color.Black;
+			this.hudLabel.Location = new System.Drawing.Point(249, 155);
+			this.hudLabel.Name = "hudLabel";
+			this.hudLabel.Size = new System.Drawing.Size(54, 25);
+			this.hudLabel.TabIndex = 0;
+			this.hudLabel.Text = "HUD";
+			this.hudLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
 			// GameForm
 			// 
@@ -599,6 +614,8 @@ namespace GameOfLife {
 			this.statusStrip1.ResumeLayout(false);
 			this.statusStrip1.PerformLayout();
 			this.contextMenuStrip1.ResumeLayout(false);
+			this.graphicsPanel1.ResumeLayout(false);
+			this.graphicsPanel1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -665,6 +682,7 @@ namespace GameOfLife {
 		private System.Windows.Forms.ToolStripMenuItem hUDContextMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem neighborCountContextMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem gridContextMenuItem;
+		private System.Windows.Forms.Label hudLabel;
 	}
 }
 
