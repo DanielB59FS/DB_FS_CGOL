@@ -58,6 +58,12 @@ namespace GameOfLife {
 
 			WindowState = Properties.Settings.Default.WindowState;
 
+			hUDContextMenuItem.Checked = hUDToolStripMenuItem.Checked = displayHUD;
+			neighborCountContextMenuItem.Checked = neighborCountToolStripMenuItem.Checked = displayNeighborCount;
+			gridContextMenuItem.Checked = gridToolStripMenuItem.Checked = displayGrid;
+			toroidalToolStripMenuItem.Checked = Toroidal;
+			finiteToolStripMenuItem.Checked = !Toroidal;
+
 			graphicsPanel1.Invalidate();
 		}
 
@@ -67,11 +73,9 @@ namespace GameOfLife {
 			ReadProperties();
 			Program.ModelInstance.Reset();
 
-			hUDContextMenuItem.Checked = hUDToolStripMenuItem.Checked = displayHUD;
-			neighborCountContextMenuItem.Checked = neighborCountToolStripMenuItem.Checked = displayNeighborCount;
-			gridContextMenuItem.Checked = gridToolStripMenuItem.Checked = displayGrid;
-			toroidalToolStripMenuItem.Checked = Toroidal;
-			finiteToolStripMenuItem.Checked = !Toroidal;
+			// TODO: find a better solution
+			graphicsPanel1.Scroll += (o, e) => { if (displayHUD) graphicsPanel1.Invalidate(); };
+			graphicsPanel1.MouseWheel += (o, e) => { if (displayHUD) graphicsPanel1.Invalidate(); };
 
 			// Setting up timer interval and speed
 			timer.Tick += Timer_Tick;
@@ -158,21 +162,22 @@ namespace GameOfLife {
 			}
 
 			if (displayHUD) {
-				//cellBrush.Color = Color.FromArgb(0xFFFFFFF - BackColor.ToArgb());
 				cellBrush.Color = Color.FromArgb(127, 255, 0, 0);
 
 				// A string format for aligning cells text
 				format.Alignment = StringAlignment.Near;
 				format.LineAlignment = StringAlignment.Far;
-				hudLabel.Font = graphicsPanel1.Font;
-				hudLabel.ForeColor = Color.Transparent;
+
+				RectangleF temp = graphicsPanel1.ClientRectangle;
+				temp.X -= graphicsPanel1.AutoScrollPosition.X;
+				temp.Y -= graphicsPanel1.AutoScrollPosition.Y;
 
 				e.Graphics.DrawString(
 					$"Generations: {Program.ModelInstance.Generation}\n" +
 					$"Alive : {Program.ModelInstance.Alive}\n" +
 					$"Boundary Type: {(Toroidal ? "Toroidal" : "Finite")}\n" +
 					$"Universe Size: (Width: {Program.ModelInstance.GridWidth}, Height: {Program.ModelInstance.GridHeight})",
-					graphicsPanel1.Font, cellBrush, new RectangleF(-graphicsPanel1.AutoScrollPosition.X, -graphicsPanel1.AutoScrollPosition.Y, graphicsPanel1.Width, graphicsPanel1.Height - cellHeight), format);
+					graphicsPanel1.Font, cellBrush, temp, format);
 			}
 
 			// Update status strip generations
@@ -194,10 +199,6 @@ namespace GameOfLife {
 				// CELL Y = MOUSE Y / CELL HEIGHT
 				float y = (e.Y - graphicsPanel1.AutoScrollPosition.Y) / cellHeight;
 
-				if (0 != graphicsPanel1.AutoScrollPosition.X || 0 != graphicsPanel1.AutoScrollPosition.Y) {
-					int h = 0;
-					++h;
-				}
 				// Toggle the cell's state
 				Program.ModelInstance.ToggleCell((int)x, (int)y);
 
@@ -242,7 +243,7 @@ namespace GameOfLife {
 			hUDToolStripMenuItem.Checked = !hUDToolStripMenuItem.Checked;
 			hUDContextMenuItem.Checked = !hUDContextMenuItem.Checked;
 			displayHUD = !displayHUD;
-			// TODO: add drawing in paint method
+			graphicsPanel1.Invalidate();
 		}
 
 		private void neighborCountToolStripMenuItem_Click(object sender, EventArgs e) {
