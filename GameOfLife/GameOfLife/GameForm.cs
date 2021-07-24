@@ -20,6 +20,7 @@ namespace GameOfLife {
 			get => Program.ModelInstance.IsToroidal;
 			set => Program.ModelInstance.IsToroidal = value;
 		}
+		bool displayHUD;
 		bool displayNeighborCount;
 		bool displayGrid;
 
@@ -44,6 +45,7 @@ namespace GameOfLife {
 			grid10Color = Properties.Settings.Default.Grid10Color;
 			graphicsPanel1.BackColor = Properties.Settings.Default.BackColor;
 
+			displayHUD = Properties.Settings.Default.DisplayHUD;
 			displayNeighborCount = Properties.Settings.Default.DisplayNeighborCount;
 			displayGrid = Properties.Settings.Default.DisplayGrid;
 			timer.Interval = Properties.Settings.Default.Inverval;
@@ -65,8 +67,9 @@ namespace GameOfLife {
 			ReadProperties();
 			Program.ModelInstance.Reset();
 
-			neighborCountToolStripMenuItem.Checked = displayNeighborCount;
-			gridToolStripMenuItem.Checked = displayGrid;
+			hUDContextMenuItem.Checked = hUDToolStripMenuItem.Checked = displayHUD;
+			neighborCountContextMenuItem.Checked = neighborCountToolStripMenuItem.Checked = displayNeighborCount;
+			gridContextMenuItem.Checked = gridToolStripMenuItem.Checked = displayGrid;
 			toroidalToolStripMenuItem.Checked = Toroidal;
 			finiteToolStripMenuItem.Checked = !Toroidal;
 
@@ -131,25 +134,17 @@ namespace GameOfLife {
 					}
 				}
 			}
-			gridPen.Color = Color.Red;
-			e.Graphics.DrawRectangle(gridPen, new Rectangle(-graphicsPanel1.AutoScrollPosition.X, -graphicsPanel1.AutoScrollPosition.Y, 20, 20));
-
+			
 			if (displayGrid) {
 				gridPen.Color = gridColor;
-				// Drawing the Y-axis grid lines
-				//for (int y = 1; y < graphicsPanel1.ClientSize.Height / cellHeight; ++y) {
-				//	gridPen.Width = (0 == y % 10) ? 2 : 1;
-				//	gridPen.Color = (0 == y % 10) ? grid10Color : gridColor;
-				//	e.Graphics.DrawLine(gridPen, -graphicsPanel1.AutoScrollPosition.X, y * cellHeight, cellWidth, y * cellHeight);
-				//}
-				// TODO: looking into partial drawing
+				// Drawing the X-axis grid lines
 				for (int y = 1; y < Program.ModelInstance.GridHeight; ++y) {
 					gridPen.Width = (0 == y % 10) ? 2 : 1;
 					gridPen.Color = (0 == y % 10) ? grid10Color : gridColor;
 					e.Graphics.DrawLine(gridPen, 0, y * cellHeight, cellWidth * Program.ModelInstance.GridWidth, y * cellHeight);
 				}
 
-				// Drawing the X-axis grid lines
+				// Drawing the Y-axis grid lines
 				for (int x = 1; x < Program.ModelInstance.GridWidth; ++x) {
 					gridPen.Width = (0 == x % 10) ? 2 : 1;
 					gridPen.Color = (0 == x % 10) ? grid10Color : gridColor;
@@ -164,6 +159,10 @@ namespace GameOfLife {
 
 			// Update status strip generations
 			toolStripStatusLabelGenerations.Text = $"Generations: {Program.ModelInstance.Generation} Interval: {timer.Interval} Alive: {Program.ModelInstance.Alive} Seed: {seed}";
+		}
+
+		private void DrawGridLines(object sender, PaintEventArgs e) {
+			//
 		}
 
 		private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e) {
@@ -227,17 +226,21 @@ namespace GameOfLife {
 
 		private void hUDToolStripMenuItem_Click(object sender, EventArgs e) {
 			hUDToolStripMenuItem.Checked = !hUDToolStripMenuItem.Checked;
+			hUDContextMenuItem.Checked = !hUDContextMenuItem.Checked;
+			displayHUD = !displayHUD;
 			// TODO: add drawing in paint method
 		}
 
 		private void neighborCountToolStripMenuItem_Click(object sender, EventArgs e) {
 			neighborCountToolStripMenuItem.Checked = !neighborCountToolStripMenuItem.Checked;
+			neighborCountContextMenuItem.Checked = !neighborCountContextMenuItem.Checked;
 			displayNeighborCount = !displayNeighborCount;
 			graphicsPanel1.Invalidate();
 		}
 
 		private void gridToolStripMenuItem_Click(object sender, EventArgs e) {
 			gridToolStripMenuItem.Checked = !gridToolStripMenuItem.Checked;
+			gridContextMenuItem.Checked = !gridContextMenuItem.Checked;
 			displayGrid = !displayGrid;
 			graphicsPanel1.Invalidate();
 		}
@@ -312,6 +315,7 @@ namespace GameOfLife {
 			Properties.Settings.Default.Grid10Color = grid10Color;
 			Properties.Settings.Default.BackColor = graphicsPanel1.BackColor;
 
+			Properties.Settings.Default.DisplayHUD = displayHUD;
 			Properties.Settings.Default.DisplayNeighborCount = displayNeighborCount;
 			Properties.Settings.Default.DisplayGrid = displayGrid;
 			Properties.Settings.Default.Inverval = timer.Interval;

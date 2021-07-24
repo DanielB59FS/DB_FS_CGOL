@@ -166,5 +166,17 @@ namespace GameOfLife.Properties {
                 this["WindowState"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DisplayHUD {
+            get {
+                return ((bool)(this["DisplayHUD"]));
+            }
+            set {
+                this["DisplayHUD"] = value;
+            }
+        }
     }
 }
