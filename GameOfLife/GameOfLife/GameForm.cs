@@ -26,7 +26,7 @@ namespace GameOfLife {
 		bool _displayNeighborCount;
 		bool _displayGrid;
 
-		float _cellWidth, _cellHeight;
+		decimal _cellWidth, _cellHeight;
 
 		// Drawing colors
 		Color cellColor;
@@ -111,22 +111,25 @@ namespace GameOfLife {
 			format.LineAlignment = StringAlignment.Center;
 
 			// Calculate the width and height of each cell in pixels
+			// CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
+			// CELL HEIGHT = WINDOW HEIGHT / NUMBER OF CELLS IN Y
 			if (!_scrollable) {
-				// CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
-				_cellWidth = (float)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth;
-				// CELL HEIGHT = WINDOW HEIGHT / NUMBER OF CELLS IN Y
-				_cellHeight = (float)graphicsPanel1.ClientSize.Height / Program.ModelInstance.GridHeight;
+				_cellWidth = (decimal)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth;
+				_cellHeight = (decimal)graphicsPanel1.ClientSize.Height / Program.ModelInstance.GridHeight;
+			} else {
+				_cellWidth = Math.Max((decimal)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth, _cellWidth);
+				_cellHeight = Math.Max((decimal)graphicsPanel1.ClientSize.Height / Program.ModelInstance.GridHeight, _cellHeight);
 			}
 
-			graphicsPanel1.AutoScrollMinSize = new SizeF(_cellWidth * Program.ModelInstance.GridWidth, _cellHeight * Program.ModelInstance.GridHeight).ToSize();
+			graphicsPanel1.AutoScrollMinSize = new SizeF((float)(_cellWidth * Program.ModelInstance.GridWidth), (float)(_cellHeight * Program.ModelInstance.GridHeight)).ToSize();
 
 			// Iterate through the universe
 			foreach (CellPoint cell in Program.ModelInstance) {
 				RectangleF cellRect = RectangleF.Empty;
-				cellRect.X = cell._x * _cellWidth;
-				cellRect.Y = cell._y * _cellHeight;
-				cellRect.Width = _cellWidth;
-				cellRect.Height = _cellHeight;
+				cellRect.X = (float)(cell._x * _cellWidth);
+				cellRect.Y = (float)(cell._y * _cellHeight);
+				cellRect.Width = (float)_cellWidth;
+				cellRect.Height = (float)_cellHeight;
 
 				if (e.Graphics.IsVisible(cellRect)) {
 					if (cell._isAlive == true) {
@@ -141,7 +144,7 @@ namespace GameOfLife {
 							cellBrush.Color = Color.Red;
 						else
 							cellBrush.Color = cell._isAlive ? Color.Green : Color.Red;
-						graphicsPanel1.Font = new Font(Font.FontFamily, _cellHeight, GraphicsUnit.Pixel);
+						graphicsPanel1.Font = new Font(Font.FontFamily, (float)_cellHeight, GraphicsUnit.Pixel);
 						e.Graphics.DrawString(cell._neighbors.ToString(), graphicsPanel1.Font, cellBrush, cellRect, format);
 					}
 				}
@@ -153,20 +156,20 @@ namespace GameOfLife {
 				for (int y = 1; y < Program.ModelInstance.GridHeight; ++y) {
 					gridPen.Width = (0 == y % 10) ? 2 : 1;
 					gridPen.Color = (0 == y % 10) ? grid10Color : gridColor;
-					e.Graphics.DrawLine(gridPen, 0, y * _cellHeight, _cellWidth * Program.ModelInstance.GridWidth, y * _cellHeight);
+					e.Graphics.DrawLine(gridPen, 0, (float)(y * _cellHeight), (float)(_cellWidth * Program.ModelInstance.GridWidth), (float)(y * _cellHeight));
 				}
 
 				// Drawing the Y-axis grid lines
 				for (int x = 1; x < Program.ModelInstance.GridWidth; ++x) {
 					gridPen.Width = (0 == x % 10) ? 2 : 1;
 					gridPen.Color = (0 == x % 10) ? grid10Color : gridColor;
-					e.Graphics.DrawLine(gridPen, x * _cellWidth, 0, x * _cellWidth, _cellHeight * Program.ModelInstance.GridHeight);
+					e.Graphics.DrawLine(gridPen, (float)(x * _cellWidth), 0, (float)(x * _cellWidth), (float)(_cellHeight * Program.ModelInstance.GridHeight));
 				}
 
 				// Drawing enclosing rectangle
 				gridPen.Color = grid10Color;
 				gridPen.Width = 4;
-				e.Graphics.DrawRectangle(gridPen, 0, 0, _cellWidth * Program.ModelInstance.GridWidth, _cellHeight * Program.ModelInstance.GridHeight);
+				e.Graphics.DrawRectangle(gridPen, 0, 0, (float)(_cellWidth * Program.ModelInstance.GridWidth), (float)(_cellHeight * Program.ModelInstance.GridHeight));
 			}
 
 			if (_displayHUD) {
@@ -203,9 +206,9 @@ namespace GameOfLife {
 
 				// Calculate the cell that was clicked in
 				// CELL X = MOUSE X / CELL WIDTH
-				float x = (e.X - graphicsPanel1.AutoScrollPosition.X) / _cellWidth;
+				decimal x = (e.X - graphicsPanel1.AutoScrollPosition.X) / _cellWidth;
 				// CELL Y = MOUSE Y / CELL HEIGHT
-				float y = (e.Y - graphicsPanel1.AutoScrollPosition.Y) / _cellHeight;
+				decimal y = (e.Y - graphicsPanel1.AutoScrollPosition.Y) / _cellHeight;
 
 				// Toggle the cell's state
 				Program.ModelInstance.ToggleCell((int)x, (int)y);
@@ -420,8 +423,8 @@ namespace GameOfLife {
 				Program.ModelInstance.Reset();
 			}
 			if (_scrollable = scrollable) {
-				_cellWidth = (float)cWidth;
-				_cellHeight = (float)cHeight;
+				_cellWidth = cWidth;
+				_cellHeight = cHeight;
 			}
 			graphicsPanel1.Invalidate();
 		}

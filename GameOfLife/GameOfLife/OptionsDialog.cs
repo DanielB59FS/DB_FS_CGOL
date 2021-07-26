@@ -39,12 +39,13 @@ namespace GameOfLife {
 
 		private GraphicsPanel _panel;
 
-		public OptionsDialog(decimal interval, decimal width, decimal height, bool scrollable, float cellWidth, float cellHeight, GraphicsPanel panel) {
+		public OptionsDialog(decimal interval, decimal width, decimal height, bool scrollable, decimal cellWidth, decimal cellHeight, GraphicsPanel panel) {
 			InitializeComponent();
 			_panel = panel;
 
 			uWidthUpDown.ValueChanged += UWidthHeightUpDown_ValueChanged;
 			uHeightUpDown.ValueChanged += UWidthHeightUpDown_ValueChanged;
+			scrollableCheckBox.CheckedChanged += options_ValueChanged;
 
 			uWidthUpDown.Minimum = uHeightUpDown.Minimum = timerIntervalUpDown.Minimum = 1;
 			cellWidthUpDown.Maximum = cellHeightUpDown.Maximum = uWidthUpDown.Maximum = uHeightUpDown.Maximum = timerIntervalUpDown.Maximum = decimal.MaxValue;
@@ -53,10 +54,11 @@ namespace GameOfLife {
 			UWidth = width;
 			UHeight = height;
 			Scrollable = scrollable;
-			CWidth = (decimal)cellWidth;
-			CHeight = (decimal)cellHeight;
+			CWidth = cellWidth;
+			CHeight = cellHeight;
 
 			buttonApply.Enabled = false;
+			scrollableCheckBox_CheckedChanged(this, EventArgs.Empty);
 		}
 
 		private void buttonApply_Click(object sender, EventArgs e) {
@@ -64,7 +66,7 @@ namespace GameOfLife {
 			buttonApply.Enabled = false;
 		}
 
-		private void upDown_ValueChanged(object sender, EventArgs e) {
+		private void options_ValueChanged(object sender, EventArgs e) {
 			buttonApply.Enabled = true;
 		}
 

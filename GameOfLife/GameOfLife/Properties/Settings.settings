@@ -44,10 +44,10 @@
     <Setting Name="Scrollable" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="CellWidth" Type="System.Single" Scope="User">
+    <Setting Name="CellWidth" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="CellHeight" Type="System.Single" Scope="User">
+    <Setting Name="CellHeight" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>

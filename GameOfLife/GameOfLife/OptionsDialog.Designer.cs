@@ -81,7 +81,7 @@ namespace GameOfLife {
 			this.timerIntervalUpDown.Name = "timerIntervalUpDown";
 			this.timerIntervalUpDown.Size = new System.Drawing.Size(120, 20);
 			this.timerIntervalUpDown.TabIndex = 0;
-			this.timerIntervalUpDown.ValueChanged += new System.EventHandler(this.upDown_ValueChanged);
+			this.timerIntervalUpDown.ValueChanged += new System.EventHandler(this.options_ValueChanged);
 			// 
 			// uWidthUpDown
 			// 
@@ -89,7 +89,7 @@ namespace GameOfLife {
 			this.uWidthUpDown.Name = "uWidthUpDown";
 			this.uWidthUpDown.Size = new System.Drawing.Size(120, 20);
 			this.uWidthUpDown.TabIndex = 1;
-			this.uWidthUpDown.ValueChanged += new System.EventHandler(this.upDown_ValueChanged);
+			this.uWidthUpDown.ValueChanged += new System.EventHandler(this.options_ValueChanged);
 			// 
 			// uHeightUpDown
 			// 
@@ -97,7 +97,7 @@ namespace GameOfLife {
 			this.uHeightUpDown.Name = "uHeightUpDown";
 			this.uHeightUpDown.Size = new System.Drawing.Size(120, 20);
 			this.uHeightUpDown.TabIndex = 2;
-			this.uHeightUpDown.ValueChanged += new System.EventHandler(this.upDown_ValueChanged);
+			this.uHeightUpDown.ValueChanged += new System.EventHandler(this.options_ValueChanged);
 			// 
 			// optionsGroupBox
 			// 
@@ -130,8 +130,8 @@ namespace GameOfLife {
 			this.cellHeightUpDown.Location = new System.Drawing.Point(228, 171);
 			this.cellHeightUpDown.Name = "cellHeightUpDown";
 			this.cellHeightUpDown.Size = new System.Drawing.Size(120, 20);
-			this.cellHeightUpDown.TabIndex = 12;
-			this.cellHeightUpDown.ValueChanged += new System.EventHandler(this.upDown_ValueChanged);
+			this.cellHeightUpDown.TabIndex = 5;
+			this.cellHeightUpDown.ValueChanged += new System.EventHandler(this.options_ValueChanged);
 			// 
 			// cellWidthUpDown
 			// 
@@ -139,8 +139,8 @@ namespace GameOfLife {
 			this.cellWidthUpDown.Location = new System.Drawing.Point(228, 148);
 			this.cellWidthUpDown.Name = "cellWidthUpDown";
 			this.cellWidthUpDown.Size = new System.Drawing.Size(120, 20);
-			this.cellWidthUpDown.TabIndex = 11;
-			this.cellWidthUpDown.ValueChanged += new System.EventHandler(this.upDown_ValueChanged);
+			this.cellWidthUpDown.TabIndex = 4;
+			this.cellWidthUpDown.ValueChanged += new System.EventHandler(this.options_ValueChanged);
 			// 
 			// cellHeightLabel
 			// 
@@ -166,7 +166,7 @@ namespace GameOfLife {
 			this.scrollableCheckBox.Location = new System.Drawing.Point(179, 121);
 			this.scrollableCheckBox.Name = "scrollableCheckBox";
 			this.scrollableCheckBox.Size = new System.Drawing.Size(72, 17);
-			this.scrollableCheckBox.TabIndex = 8;
+			this.scrollableCheckBox.TabIndex = 3;
 			this.scrollableCheckBox.Text = "Scrollable";
 			this.scrollableCheckBox.UseVisualStyleBackColor = true;
 			this.scrollableCheckBox.CheckedChanged += new System.EventHandler(this.scrollableCheckBox_CheckedChanged);
@@ -186,7 +186,7 @@ namespace GameOfLife {
 			this.buttonCancel.Location = new System.Drawing.Point(273, 214);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-			this.buttonCancel.TabIndex = 5;
+			this.buttonCancel.TabIndex = 8;
 			this.buttonCancel.Text = "Cancel";
 			this.buttonCancel.UseVisualStyleBackColor = true;
 			// 
@@ -196,7 +196,7 @@ namespace GameOfLife {
 			this.buttonApply.Location = new System.Drawing.Point(179, 214);
 			this.buttonApply.Name = "buttonApply";
 			this.buttonApply.Size = new System.Drawing.Size(75, 23);
-			this.buttonApply.TabIndex = 4;
+			this.buttonApply.TabIndex = 7;
 			this.buttonApply.Text = "Apply";
 			this.buttonApply.UseVisualStyleBackColor = true;
 			this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
@@ -207,7 +207,7 @@ namespace GameOfLife {
 			this.buttonOk.Location = new System.Drawing.Point(82, 214);
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.Size = new System.Drawing.Size(75, 23);
-			this.buttonOk.TabIndex = 3;
+			this.buttonOk.TabIndex = 6;
 			this.buttonOk.Text = "Ok";
 			this.buttonOk.UseVisualStyleBackColor = true;
 			// 

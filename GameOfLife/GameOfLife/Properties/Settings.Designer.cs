@@ -194,9 +194,9 @@ namespace GameOfLife.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public float CellWidth {
+        public decimal CellWidth {
             get {
-                return ((float)(this["CellWidth"]));
+                return ((decimal)(this["CellWidth"]));
             }
             set {
                 this["CellWidth"] = value;
@@ -206,9 +206,9 @@ namespace GameOfLife.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public float CellHeight {
+        public decimal CellHeight {
             get {
-                return ((float)(this["CellHeight"]));
+                return ((decimal)(this["CellHeight"]));
             }
             set {
                 this["CellHeight"] = value;
