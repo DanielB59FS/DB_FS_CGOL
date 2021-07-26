@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 // Change the namespace to your project's namespace.
 namespace GameOfLife {
-	class GraphicsPanel : Panel {
+	public class GraphicsPanel : Panel {
 
 		// Default constructor
 		public GraphicsPanel() {

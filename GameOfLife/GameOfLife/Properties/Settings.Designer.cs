@@ -25,7 +25,7 @@ namespace GameOfLife.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
         public int UniverseWidthCellCount {
             get {
                 return ((int)(this["UniverseWidthCellCount"]));
@@ -37,7 +37,7 @@ namespace GameOfLife.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
         public int UniverseHeightCellCount {
             get {
                 return ((int)(this["UniverseHeightCellCount"]));
@@ -176,6 +176,42 @@ namespace GameOfLife.Properties {
             }
             set {
                 this["DisplayHUD"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Scrollable {
+            get {
+                return ((bool)(this["Scrollable"]));
+            }
+            set {
+                this["Scrollable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float CellWidth {
+            get {
+                return ((float)(this["CellWidth"]));
+            }
+            set {
+                this["CellWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float CellHeight {
+            get {
+                return ((float)(this["CellHeight"]));
+            }
+            set {
+                this["CellHeight"] = value;
             }
         }
     }

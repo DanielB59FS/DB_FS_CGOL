@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="UniverseWidthCellCount" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">100</Value>
+      <Value Profile="(Default)">30</Value>
     </Setting>
     <Setting Name="UniverseHeightCellCount" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">100</Value>
+      <Value Profile="(Default)">30</Value>
     </Setting>
     <Setting Name="QuadTreeModel" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -40,6 +40,15 @@
     </Setting>
     <Setting Name="DisplayHUD" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Scrollable" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CellWidth" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="CellHeight" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

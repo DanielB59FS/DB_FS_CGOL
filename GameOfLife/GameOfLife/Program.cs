@@ -25,7 +25,6 @@ namespace GameOfLife {
 		/// </summary>
 		[STAThread]
 		static void Main() {
-			//Properties.Settings.Default.Seed = DateTime.Now.Millisecond * DateTime.Now.Second;
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new GameForm());
