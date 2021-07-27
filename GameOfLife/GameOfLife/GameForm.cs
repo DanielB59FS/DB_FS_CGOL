@@ -432,5 +432,13 @@ namespace GameOfLife {
 		public void OptionsApplyHandler(object sender, OptionsDialog.OptionsApplyEventArgs e) {
 			SaveOptions(sender, e.Interval, e.UWidth, e.UHeight, e.Scrollable, e.CWidth, e.CHeight);
 		}
+		
+		private void importToolStripMenuItem_Click(object sender, EventArgs e) {
+			using (LexiconDialog ldlg = new LexiconDialog()) {
+				if (DialogResult.OK == ldlg.ShowDialog()) {
+					//
+				}
+			}
+		}
 	}
 }
