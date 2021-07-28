@@ -13,6 +13,7 @@ namespace GameOfLife {
 		BigInteger Generation { get; set; }
 		BigInteger Alive { get; set; }
 		void Reset();
+		void Load(List<T> data, int offsetX = 0, int offsetY = 0);
 		T this[int i, int j] { get; set; }
 		void UpdateNeighbors(int x, int y);
 		void ToggleCell(int x, int y);

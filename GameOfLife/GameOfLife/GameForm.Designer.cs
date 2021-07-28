@@ -138,6 +138,7 @@ namespace GameOfLife {
 			this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
 			this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.openToolStripMenuItem.Text = "&Open";
+			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// importToolStripMenuItem
 			// 
@@ -159,6 +160,7 @@ namespace GameOfLife {
 			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
 			this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.saveToolStripMenuItem.Text = "&Save";
+			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
@@ -420,6 +422,7 @@ namespace GameOfLife {
 			this.openToolStripButton.Name = "openToolStripButton";
 			this.openToolStripButton.Size = new System.Drawing.Size(23, 22);
 			this.openToolStripButton.Text = "&Open";
+			this.openToolStripButton.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// saveToolStripButton
 			// 
@@ -429,6 +432,7 @@ namespace GameOfLife {
 			this.saveToolStripButton.Name = "saveToolStripButton";
 			this.saveToolStripButton.Size = new System.Drawing.Size(23, 22);
 			this.saveToolStripButton.Text = "&Save";
+			this.saveToolStripButton.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator6
 			// 
@@ -592,7 +596,6 @@ namespace GameOfLife {
 			this.MinimumSize = new System.Drawing.Size(600, 600);
 			this.Name = "GameForm";
 			this.Text = "Conway\'s Game of Life";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();

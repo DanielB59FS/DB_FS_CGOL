@@ -83,6 +83,7 @@ namespace GameOfLife {
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "RunToDialog";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "RunTo";
 			((System.ComponentModel.ISupportInitialize)(this.generationUpDown)).EndInit();
 			this.ResumeLayout(false);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -129,6 +130,8 @@ namespace GameOfLife {
 
 			graphicsPanel1.AutoScrollMinSize = new SizeF((float)(_cellWidth * Program.ModelInstance.GridWidth), (float)(_cellHeight * Program.ModelInstance.GridHeight)).ToSize();
 
+			graphicsPanel1.Font = new Font(Font.FontFamily, (float)_cellHeight, GraphicsUnit.Pixel);
+
 			// Iterate through the universe
 			foreach (CellPoint cell in Program.ModelInstance) {
 				RectangleF cellRect = RectangleF.Empty;
@@ -150,7 +153,6 @@ namespace GameOfLife {
 							cellBrush.Color = Color.Red;
 						else
 							cellBrush.Color = cell._isAlive ? Color.Green : Color.Red;
-						graphicsPanel1.Font = new Font(Font.FontFamily, (float)_cellHeight, GraphicsUnit.Pixel);
 						e.Graphics.DrawString(cell._neighbors.ToString(), graphicsPanel1.Font, cellBrush, cellRect, format);
 					}
 				}
@@ -204,11 +206,6 @@ namespace GameOfLife {
 		private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e) {
 			// If the left mouse button was clicked
 			if (e.Button == MouseButtons.Left) {
-				// Calculate the width and height of each cell in pixels
-				//_cellWidth = (float)graphicsPanel1.ClientSize.Width / Program.ModelInstance.GridWidth;
-				//_cellWidth = Math.Max(_cellWidth, graphicsPanel1.ClientSize.Width * 0.066f);
-				//_cellHeight = (float)graphicsPanel1.ClientSize.Height / Program.ModelInstance.GridHeight;
-				//_cellHeight = Math.Max(_cellHeight, graphicsPanel1.ClientSize.Height * 0.041f);
 
 				// Calculate the cell that was clicked in
 				// CELL X = MOUSE X / CELL WIDTH
@@ -347,10 +344,6 @@ namespace GameOfLife {
 			ReadProperties();
 		}
 
-		private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
-			//
-		}
-
 		private void Form1_FormClosed(object sender, FormClosedEventArgs e) {
 			Properties.Settings.Default.CellColor = cellColor;
 			Properties.Settings.Default.GridColor = gridColor;
@@ -448,11 +441,73 @@ namespace GameOfLife {
 		public void OptionsApplyHandler(object sender, OptionsDialog.OptionsApplyEventArgs e) {
 			SaveOptions(sender, e.Interval, e.UWidth, e.UHeight, e.Scrollable, e.CWidth, e.CHeight);
 		}
-		
+
+		private void saveToolStripMenuItem_Click(object sender, EventArgs e) {
+			using (SaveFileDialog sdlg = new SaveFileDialog()) {
+				sdlg.Filter = "All Files|*.*|Cells|*.cells";
+				sdlg.FilterIndex = 2;
+
+				if (DialogResult.OK == sdlg.ShowDialog()) {
+					try {
+						File.WriteAllText(sdlg.FileName, Utility.ModelToString(Program.ModelInstance));
+					}
+					catch (IOException err) {
+						MessageBox.Show(err.Message, "Error saving!", MessageBoxButtons.OK);
+					}
+				}
+			}
+		}
+
+		private string OpenFileDialogAndPattern() {
+			using (OpenFileDialog odlg = new OpenFileDialog()) {
+				string pattern = null;
+
+				odlg.Filter = "All Files|*.*|Cells|*.cells";
+				odlg.FilterIndex = 2;
+
+				if (DialogResult.OK == odlg.ShowDialog()) {
+					try {
+						pattern = File.ReadAllText(odlg.FileName);
+					}
+					catch (IOException err) {
+						MessageBox.Show(err.Message, "Error importing!", MessageBoxButtons.OK);
+					}
+				}
+
+				return pattern;
+			}
+		}
+
+		private void openToolStripMenuItem_Click(object sender, EventArgs e) {
+			string pattern = OpenFileDialogAndPattern();
+			if (null != pattern && string.Empty != pattern) {
+				List<CellPoint> data = Utility.PatternToList(pattern);
+				Program.ModelInstance.GridWidth = data.Max(cell => cell._x) + 1;
+				Program.ModelInstance.GridHeight = data.Max(cell => cell._y) + 1;
+				Program.ModelInstance.Reset();
+				Program.ModelInstance.Load(data);
+				graphicsPanel1.Invalidate();
+			}
+		}
+
 		private void importToolStripMenuItem_Click(object sender, EventArgs e) {
-			using (LexiconDialog ldlg = new LexiconDialog()) {
-				if (!ldlg.IsDisposed && DialogResult.OK == ldlg.ShowDialog()) {
-					//
+			DialogResult res = MessageBox.Show("Would you like to import a Lexicon pattern?", "Import", MessageBoxButtons.YesNoCancel);
+			string pattern = null;
+			if (DialogResult.Yes == res)
+				using (LexiconDialog ldlg = new LexiconDialog()) {
+					if (!ldlg.IsDisposed && DialogResult.OK == ldlg.ShowDialog()) {
+						pattern = ldlg.SelectedPattern;
+					}
+				}
+			else if (DialogResult.No == res) {
+				pattern = OpenFileDialogAndPattern();
+			}
+			if (null != pattern) {
+				using (PositionDialog pdlg = new PositionDialog(Program.ModelInstance.GridWidth, Program.ModelInstance.GridHeight)) {
+					if (DialogResult.OK == pdlg.ShowDialog()) {
+						Program.ModelInstance.Load(Utility.PatternToList(pattern), (int)pdlg.X, (int)pdlg.Y);
+						graphicsPanel1.Invalidate();
+					}
 				}
 			}
 		}

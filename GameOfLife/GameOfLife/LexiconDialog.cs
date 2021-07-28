@@ -23,9 +23,9 @@ namespace GameOfLife {
 		static LexiconDialog() {
 			try {
 				string text = File.ReadAllText("lexicon.txt");
-				List<string> lines = text.Trim().Split(new char[] { '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+				string[] lines = text.Trim().Split(new char[] { '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries);
 				LexiconPattern pattern = null;
-				for (int i = 0; i < lines.Count; ++i) {
+				for (int i = 0; i < lines.Length; ++i) {
 					lines[i] = lines[i].Trim();
 					if (':' == lines[i][0]) {
 						if (null != pattern && string.Empty != pattern.Pattern)

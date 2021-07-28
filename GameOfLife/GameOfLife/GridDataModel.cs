@@ -37,6 +37,19 @@ namespace GameOfLife {
 					_universe[i, j] = new CellPoint(i, j);
 		}
 
+		public void Load(List<CellPoint> data, int offsetX = 0, int offsetY = 0) {
+			foreach (CellPoint cell in data) {
+				int x = cell._x + offsetX, y = cell._y + offsetY;
+				if (IsToroidal) {
+					x %= GridWidth;
+					y %= GridHeight;
+				}
+				if (x < 0 || x >= GridWidth || y < 0 || y >= GridHeight) continue;
+				if (_universe[x, y]._isAlive != cell._isAlive)
+					ToggleCell(x, y);
+			}
+		}
+
 		public CellPoint this[int i, int j] {
 			get => _universe [i, j];
 			set => _universe[i, j] = value;

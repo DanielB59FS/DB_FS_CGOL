@@ -29,6 +29,10 @@ namespace GameOfLife {
 			// TODO: Implement
 		}
 
+		public void Load(List<CellPoint> data, int offsetX = 0, int offsetY = 0) {
+			//
+		}
+
 		public CellPoint this[int i, int j] {
 			get => _universe.Query((data) => i == data._x && j == data._y)[0];
 			set => _universe.Query((data) => i == data._x && j == data._y)[0] = value;
