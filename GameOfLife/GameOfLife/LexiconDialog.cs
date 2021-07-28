@@ -19,7 +19,7 @@ namespace GameOfLife {
 		private static List<LexiconPattern> _patterns = new List<LexiconPattern>();
 		public string SelectedPattern { get => dataGridView1.SelectedRows[0].Cells[0].Value as string; }
 
-		public static bool Loaded = false;
+		private static string errorMessage;
 		static LexiconDialog() {
 			try {
 				string text = File.ReadAllText("lexicon.txt");
@@ -32,26 +32,34 @@ namespace GameOfLife {
 							_patterns.Add(pattern);
 						pattern = new LexiconPattern();
 					}
-					if ('.' == lines[i][0] || 'O' == lines[i][0])
+					if ('.' == lines[i][0] || '*' == lines[i][0])
 						pattern.Pattern += lines[i] + "\n";
 					else
 						pattern.Description += lines[i] + "\n";
 				}
-				Loaded = true;
+				errorMessage = null;
 			}
 			catch (IOException e) {
-				MessageBox.Show("Error loading LexiconPatterns!", e.Message, MessageBoxButtons.OK);
+				errorMessage = e.Message;
 			}
 		}
 		public LexiconDialog() {
-			InitializeComponent();
-
-			foreach (LexiconPattern pattern in _patterns)
-				dataGridView1.Rows.Add(pattern.Pattern, pattern.Description);
+			if (null == errorMessage) {
+				InitializeComponent();
+				
+				foreach (LexiconPattern pattern in _patterns)
+					dataGridView1.Rows.Add(pattern.Pattern, pattern.Description);
+			}
+			else {
+				MessageBox.Show(errorMessage, "Error loading LexiconPatterns!", MessageBoxButtons.OK);
+				DialogResult = DialogResult.Cancel;
+				Close();
+			}
 		}
 
 		private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
-			Console.WriteLine(e.RowIndex);
+			DialogResult = DialogResult.OK;
+			Close();
 		}
 	}
 }

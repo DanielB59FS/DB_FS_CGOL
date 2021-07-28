@@ -36,7 +36,6 @@ namespace GameOfLife {
 			this.cellHeightLabel = new System.Windows.Forms.Label();
 			this.cellWidthLabel = new System.Windows.Forms.Label();
 			this.scrollableCheckBox = new System.Windows.Forms.CheckBox();
-			this.label1 = new System.Windows.Forms.Label();
 			this.buttonCancel = new System.Windows.Forms.Button();
 			this.buttonApply = new System.Windows.Forms.Button();
 			this.buttonOk = new System.Windows.Forms.Button();
@@ -50,6 +49,9 @@ namespace GameOfLife {
 			// 
 			// uHeightLabel
 			// 
+			this.uHeightLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.uHeightLabel.AutoSize = true;
 			this.uHeightLabel.Location = new System.Drawing.Point(105, 88);
 			this.uHeightLabel.Name = "uHeightLabel";
@@ -59,6 +61,9 @@ namespace GameOfLife {
 			// 
 			// uWidthLabel
 			// 
+			this.uWidthLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.uWidthLabel.AutoSize = true;
 			this.uWidthLabel.Location = new System.Drawing.Point(108, 61);
 			this.uWidthLabel.Name = "uWidthLabel";
@@ -68,6 +73,9 @@ namespace GameOfLife {
 			// 
 			// timerLabel
 			// 
+			this.timerLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.timerLabel.AutoSize = true;
 			this.timerLabel.Location = new System.Drawing.Point(79, 34);
 			this.timerLabel.Name = "timerLabel";
@@ -77,6 +85,9 @@ namespace GameOfLife {
 			// 
 			// timerIntervalUpDown
 			// 
+			this.timerIntervalUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.timerIntervalUpDown.Location = new System.Drawing.Point(228, 32);
 			this.timerIntervalUpDown.Name = "timerIntervalUpDown";
 			this.timerIntervalUpDown.Size = new System.Drawing.Size(120, 20);
@@ -85,6 +96,9 @@ namespace GameOfLife {
 			// 
 			// uWidthUpDown
 			// 
+			this.uWidthUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.uWidthUpDown.Location = new System.Drawing.Point(228, 59);
 			this.uWidthUpDown.Name = "uWidthUpDown";
 			this.uWidthUpDown.Size = new System.Drawing.Size(120, 20);
@@ -93,6 +107,9 @@ namespace GameOfLife {
 			// 
 			// uHeightUpDown
 			// 
+			this.uHeightUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.uHeightUpDown.Location = new System.Drawing.Point(228, 86);
 			this.uHeightUpDown.Name = "uHeightUpDown";
 			this.uHeightUpDown.Size = new System.Drawing.Size(120, 20);
@@ -101,12 +118,13 @@ namespace GameOfLife {
 			// 
 			// optionsGroupBox
 			// 
+			this.optionsGroupBox.AutoSize = true;
+			this.optionsGroupBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.optionsGroupBox.Controls.Add(this.cellHeightUpDown);
 			this.optionsGroupBox.Controls.Add(this.cellWidthUpDown);
 			this.optionsGroupBox.Controls.Add(this.cellHeightLabel);
 			this.optionsGroupBox.Controls.Add(this.cellWidthLabel);
 			this.optionsGroupBox.Controls.Add(this.scrollableCheckBox);
-			this.optionsGroupBox.Controls.Add(this.label1);
 			this.optionsGroupBox.Controls.Add(this.buttonCancel);
 			this.optionsGroupBox.Controls.Add(this.buttonApply);
 			this.optionsGroupBox.Controls.Add(this.buttonOk);
@@ -126,6 +144,9 @@ namespace GameOfLife {
 			// 
 			// cellHeightUpDown
 			// 
+			this.cellHeightUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.cellHeightUpDown.DecimalPlaces = 2;
 			this.cellHeightUpDown.Location = new System.Drawing.Point(228, 171);
 			this.cellHeightUpDown.Name = "cellHeightUpDown";
@@ -135,6 +156,9 @@ namespace GameOfLife {
 			// 
 			// cellWidthUpDown
 			// 
+			this.cellWidthUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.cellWidthUpDown.DecimalPlaces = 2;
 			this.cellWidthUpDown.Location = new System.Drawing.Point(228, 148);
 			this.cellWidthUpDown.Name = "cellWidthUpDown";
@@ -144,6 +168,9 @@ namespace GameOfLife {
 			// 
 			// cellHeightLabel
 			// 
+			this.cellHeightLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.cellHeightLabel.AutoSize = true;
 			this.cellHeightLabel.Location = new System.Drawing.Point(161, 173);
 			this.cellHeightLabel.Name = "cellHeightLabel";
@@ -153,6 +180,9 @@ namespace GameOfLife {
 			// 
 			// cellWidthLabel
 			// 
+			this.cellWidthLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.cellWidthLabel.AutoSize = true;
 			this.cellWidthLabel.Location = new System.Drawing.Point(164, 150);
 			this.cellWidthLabel.Name = "cellWidthLabel";
@@ -162,6 +192,9 @@ namespace GameOfLife {
 			// 
 			// scrollableCheckBox
 			// 
+			this.scrollableCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.scrollableCheckBox.AutoSize = true;
 			this.scrollableCheckBox.Location = new System.Drawing.Point(179, 121);
 			this.scrollableCheckBox.Name = "scrollableCheckBox";
@@ -171,17 +204,11 @@ namespace GameOfLife {
 			this.scrollableCheckBox.UseVisualStyleBackColor = true;
 			this.scrollableCheckBox.CheckedChanged += new System.EventHandler(this.scrollableCheckBox_CheckedChanged);
 			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(3, 16);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(35, 13);
-			this.label1.TabIndex = 6;
-			this.label1.Text = "label1";
-			// 
 			// buttonCancel
 			// 
+			this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.buttonCancel.Location = new System.Drawing.Point(273, 214);
 			this.buttonCancel.Name = "buttonCancel";
@@ -192,6 +219,9 @@ namespace GameOfLife {
 			// 
 			// buttonApply
 			// 
+			this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonApply.Enabled = false;
 			this.buttonApply.Location = new System.Drawing.Point(179, 214);
 			this.buttonApply.Name = "buttonApply";
@@ -203,6 +233,9 @@ namespace GameOfLife {
 			// 
 			// buttonOk
 			// 
+			this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.buttonOk.Location = new System.Drawing.Point(82, 214);
 			this.buttonOk.Name = "buttonOk";
@@ -234,6 +267,7 @@ namespace GameOfLife {
 			((System.ComponentModel.ISupportInitialize)(this.cellHeightUpDown)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.cellWidthUpDown)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -249,7 +283,6 @@ namespace GameOfLife {
 		private System.Windows.Forms.Button buttonApply;
 		private System.Windows.Forms.Button buttonOk;
 		private System.Windows.Forms.CheckBox scrollableCheckBox;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown cellHeightUpDown;
 		private System.Windows.Forms.NumericUpDown cellWidthUpDown;
 		private System.Windows.Forms.Label cellHeightLabel;

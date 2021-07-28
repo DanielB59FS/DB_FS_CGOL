@@ -435,7 +435,7 @@ namespace GameOfLife {
 		
 		private void importToolStripMenuItem_Click(object sender, EventArgs e) {
 			using (LexiconDialog ldlg = new LexiconDialog()) {
-				if (DialogResult.OK == ldlg.ShowDialog()) {
+				if (!ldlg.IsDisposed && DialogResult.OK == ldlg.ShowDialog()) {
 					//
 				}
 			}
