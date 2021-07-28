@@ -29,10 +29,10 @@ namespace GameOfLife {
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.dataGridView1 = new System.Windows.Forms.DataGridView();
-			this.buttonConfirm = new System.Windows.Forms.Button();
-			this.buttonCancel = new System.Windows.Forms.Button();
 			this.patternColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.descriptionColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.buttonConfirm = new System.Windows.Forms.Button();
+			this.buttonCancel = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -69,26 +69,6 @@ namespace GameOfLife {
 			this.dataGridView1.TabIndex = 1;
 			this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
 			// 
-			// buttonConfirm
-			// 
-			this.buttonConfirm.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.buttonConfirm.Location = new System.Drawing.Point(375, 440);
-			this.buttonConfirm.Name = "buttonConfirm";
-			this.buttonConfirm.Size = new System.Drawing.Size(75, 23);
-			this.buttonConfirm.TabIndex = 2;
-			this.buttonConfirm.Text = "Confirm";
-			this.buttonConfirm.UseVisualStyleBackColor = true;
-			// 
-			// buttonCancel
-			// 
-			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(467, 440);
-			this.buttonCancel.Name = "buttonCancel";
-			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-			this.buttonCancel.TabIndex = 3;
-			this.buttonCancel.Text = "Cancel";
-			this.buttonCancel.UseVisualStyleBackColor = true;
-			// 
 			// patternColumn
 			// 
 			this.patternColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -109,6 +89,26 @@ namespace GameOfLife {
 			this.descriptionColumn.ReadOnly = true;
 			this.descriptionColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
 			// 
+			// buttonConfirm
+			// 
+			this.buttonConfirm.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.buttonConfirm.Location = new System.Drawing.Point(375, 440);
+			this.buttonConfirm.Name = "buttonConfirm";
+			this.buttonConfirm.Size = new System.Drawing.Size(75, 23);
+			this.buttonConfirm.TabIndex = 0;
+			this.buttonConfirm.Text = "Confirm";
+			this.buttonConfirm.UseVisualStyleBackColor = true;
+			// 
+			// buttonCancel
+			// 
+			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.buttonCancel.Location = new System.Drawing.Point(467, 440);
+			this.buttonCancel.Name = "buttonCancel";
+			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+			this.buttonCancel.TabIndex = 1;
+			this.buttonCancel.Text = "Cancel";
+			this.buttonCancel.UseVisualStyleBackColor = true;
+			// 
 			// LexiconDialog
 			// 
 			this.AcceptButton = this.buttonConfirm;
@@ -125,7 +125,7 @@ namespace GameOfLife {
 			this.MinimizeBox = false;
 			this.Name = "LexiconDialog";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "LexiconDialog";
+			this.Text = "Lexicon";
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.ResumeLayout(false);
 

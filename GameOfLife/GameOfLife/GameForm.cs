@@ -26,6 +26,8 @@ namespace GameOfLife {
 		bool _displayNeighborCount;
 		bool _displayGrid;
 
+		decimal _runTo = -1;
+
 		decimal _cellWidth, _cellHeight;
 
 		// Drawing colors
@@ -97,7 +99,11 @@ namespace GameOfLife {
 
 		// The event called by the timer every Interval milliseconds.
 		private void Timer_Tick(object sender, EventArgs e) {
-			Program.ModelInstance.NextGeneration();
+			if (-1 != _runTo && _runTo <= (decimal)Program.ModelInstance.Generation) {
+				pauseToolStripButton_Click(this, EventArgs.Empty);
+			}
+			else
+				Program.ModelInstance.NextGeneration();
 			graphicsPanel1.Invalidate();
 		}
 
@@ -219,6 +225,7 @@ namespace GameOfLife {
 		}
 
 		private void playToolStripButton_Click(object sender, EventArgs e) {
+			toToolStripMenuItem.Enabled = false;
 			playToolStripButton.Enabled = playToolStripMenuItem.Enabled = false;
 			stepToolStripButton.Enabled = stepToolStripMenuItem.Enabled = false;
 			pauseToolStripButton.Enabled = pauseToolStripMenuItem.Enabled = true;
@@ -234,6 +241,8 @@ namespace GameOfLife {
 			pauseToolStripButton.Enabled = pauseToolStripMenuItem.Enabled = false;
 			playToolStripButton.Enabled = playToolStripMenuItem.Enabled = true;
 			stepToolStripButton.Enabled = stepToolStripMenuItem.Enabled = true;
+			toToolStripMenuItem.Enabled = true;
+			_runTo = -1;
 		}
 
 		private void newToolStripButton_Click(object sender, EventArgs e) {
@@ -243,7 +252,14 @@ namespace GameOfLife {
 		}
 
 		private void toToolStripMenuItem_Click(object sender, EventArgs e) {
-			// TODO: modal dialog box
+			using (RunToDialog rdlg = new RunToDialog((decimal)Program.ModelInstance.Generation)) {
+				rdlg.Generation = (decimal)Program.ModelInstance.Generation;
+
+				if (DialogResult.OK == rdlg.ShowDialog()) {
+					_runTo = rdlg.Generation;
+					playToolStripButton_Click(this, EventArgs.Empty);
+				}
+			}
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e) {

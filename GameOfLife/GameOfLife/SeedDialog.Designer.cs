@@ -148,7 +148,6 @@ namespace GameOfLife {
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoSize = true;
-			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.CancelButton = this.cancelButton;
 			this.ClientSize = new System.Drawing.Size(308, 140);
 			this.Controls.Add(this.tableLayoutPanel1);
@@ -158,7 +157,7 @@ namespace GameOfLife {
 			this.Name = "SeedDialog";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "SeedDialog";
+			this.Text = "Seed";
 			((System.ComponentModel.ISupportInitialize)(this.seedNumericUpDown)).EndInit();
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
