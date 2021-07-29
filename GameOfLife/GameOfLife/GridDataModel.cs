@@ -7,7 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GameOfLife {
+
+	/// <summary>
+	/// Grid data model for the game of life functionality
+	/// </summary>
 	public class GridDataModel : IDataModel<CellPoint> {
+
+		// Data
 		private CellPoint[,] _universe = null;
 
 		private bool _isToroidal;
@@ -27,6 +33,7 @@ namespace GameOfLife {
 		public BigInteger Generation { get; set; } = 0;
 		public BigInteger Alive { get; set; } = 0;
 
+		// Resetting the model to a clean universe
 		public void Reset() {
 			_universe = new CellPoint[GridWidth, GridHeight];
 
@@ -37,6 +44,7 @@ namespace GameOfLife {
 					_universe[i, j] = new CellPoint(i, j);
 		}
 
+		// Loading a grid pattern into the universe with selected offset
 		public void Load(List<CellPoint> data, int offsetX = 0, int offsetY = 0) {
 			foreach (CellPoint cell in data) {
 				int x = cell._x + offsetX, y = cell._y + offsetY;
@@ -55,6 +63,7 @@ namespace GameOfLife {
 			set => _universe[i, j] = value;
 		}
 
+		// Randomly changing cell's state
 		public void GenerateCells(int seed) {
 			Random prng = new Random(seed);
 
@@ -69,6 +78,7 @@ namespace GameOfLife {
 			}
 		}
 
+		// Updating the neighbor count of cells around a given cell & state
 		public void UpdateNeighbors(int x, int y) {
 			if (IsToroidal)
 				UpdateNeighborsToroidal(x, y);
@@ -139,6 +149,7 @@ namespace GameOfLife {
 				}
 		}
 
+		// Toggle cell state
 		public void ToggleCell(int x, int y) {
 			if (_universe[x,y]._isAlive = !_universe[x, y]._isAlive)
 				++Program.ModelInstance.Alive;
@@ -163,6 +174,7 @@ namespace GameOfLife {
 					--Alive;
 					delta.Add(cell);
 				}
+			// Since I'm only updating the neighbor count after updating the cell's state I avoid having to maintain a sketch universe
 			foreach (CellPoint cell in delta) UpdateNeighbors(cell._x, cell._y);
 
 			// Increment generation count

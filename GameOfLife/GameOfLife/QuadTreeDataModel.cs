@@ -7,7 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GameOfLife {
+
+	/// <summary>
+	/// QuadTree data model for the game of life functionality
+	/// </summary>
 	public class QuadTreeDataModel : IDataModel<CellPoint> {
+		
+		// Data
 		private QuadTree<RectangleBoundary, CellPoint> _universe = null;
 
 		private bool _isToroidal;
@@ -27,6 +33,7 @@ namespace GameOfLife {
 		public BigInteger Generation { get; set; } = 0;
 		public BigInteger Alive { get; set; } = 0;
 
+		// Resetting the model to a clean universe
 		public void Reset() {
 			_universe = new QuadTree<RectangleBoundary, CellPoint>(new RectangleBoundary() { _x = 0, _y = 0, _w = GridWidth, _h = GridHeight }, (list) => list.Count < 10);
 
@@ -37,6 +44,7 @@ namespace GameOfLife {
 					_universe.Insert(new CellPoint(x, y));
 		}
 
+		// Loading a grid pattern into the universe with selected offset
 		public void Load(List<CellPoint> data, int offsetX = 0, int offsetY = 0) {
 			foreach (CellPoint cell in data) {
 				int x = cell._x + offsetX, y = cell._y + offsetY;
@@ -54,6 +62,7 @@ namespace GameOfLife {
 			get => _universe.Query((data) => i == data._x && j == data._y)[0];
 		}
 
+		// Randomly changing cell's state
 		public void GenerateCells(int seed) {
 			Random prng = new Random(seed);
 
@@ -68,6 +77,7 @@ namespace GameOfLife {
 			}
 		}
 
+		#region Previous Version
 		//public void CountNeighborsFinite(int x, int y) {
 		//	int count = 0;
 		//	RectangleBoundary boundaryCheck = new RectangleBoundary() { _x = x - 1, _y = y - 1, _w = 3, _h = 3 };
@@ -76,7 +86,9 @@ namespace GameOfLife {
 		//	cells.Remove(selectedCell);
 		//	foreach (CellPoint cell in cells) if (cell._isAlive) ++selectedCell._neighbors;
 		//}
+		#endregion
 
+		// Updating the neighbor count of cells around a given cell & state
 		public void UpdateNeighbors(CellPoint cell) {
 			if (IsToroidal)
 				UpdateNeighborsToroidal(cell);
@@ -84,6 +96,7 @@ namespace GameOfLife {
 				UpdateNeighborsFinite(cell);
 		}
 
+		// Updating the neighbor count of cells around a given cell & state
 		public void UpdateNeighbors(int x, int y) {
 			UpdateNeighbors(this[x, y]);
 		}
@@ -167,6 +180,7 @@ namespace GameOfLife {
 			//	}
 		}
 
+		// Toggle cell state
 		public void ToggleCell(int x, int y) {
 			CellPoint cell = this[x, y];
 			if (cell._isAlive = !cell._isAlive)
@@ -176,6 +190,7 @@ namespace GameOfLife {
 			UpdateNeighbors(cell);
 		}
 
+		// Calculating the next generation of the universe
 		public void NextGeneration() {
 
 			// Generating the next generation data
@@ -191,6 +206,7 @@ namespace GameOfLife {
 					--Alive;
 					delta.Add(cell);
 				}
+			// Since I'm only updating the neighbor count after updating the cell's state I avoid having to maintain a sketch universe
 			foreach (CellPoint cell in delta) UpdateNeighbors(cell._x, cell._y);
 
 			// Increment generation count

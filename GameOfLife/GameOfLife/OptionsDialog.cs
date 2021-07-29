@@ -43,6 +43,7 @@ namespace GameOfLife {
 			InitializeComponent();
 			_panel = panel;
 
+			//  Events to update cell width & height option values based on selected universe size
 			uWidthUpDown.ValueChanged += UWidthHeightUpDown_ValueChanged;
 			uHeightUpDown.ValueChanged += UWidthHeightUpDown_ValueChanged;
 			scrollableCheckBox.CheckedChanged += options_ValueChanged;
@@ -70,6 +71,7 @@ namespace GameOfLife {
 			buttonApply.Enabled = true;
 		}
 
+		// Calculating the minimal cell width & height to avoid whitespace
 		private void UWidthHeightUpDown_ValueChanged(object sender, EventArgs e) {
 			if (0 != UWidth && 0 != UHeight) {
 				cellWidthUpDown.Minimum = _panel.ClientSize.Width / UWidth;

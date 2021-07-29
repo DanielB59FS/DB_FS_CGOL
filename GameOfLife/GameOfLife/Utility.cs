@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace GameOfLife {
 	public static class Utility {
+		
+		// Transforming the model's data into string to use for saving
 		public static string ModelToString(IDataModel<CellPoint> model) {
 			StringBuilder builder = new StringBuilder();
 
@@ -24,17 +26,23 @@ namespace GameOfLife {
 
 			return builder.ToString();
 		}
+
+		// Transforming string into model's data type for loading into the model
 		public static List<CellPoint> PatternToList(string pattern) {
 			int x = 0, y = 0;
 			List<CellPoint> result = new List<CellPoint>();
 
 			if (null != pattern && string.Empty != pattern) {
+
+				// Splitting & cleaning up the lines
 				string[] lines = pattern.Trim().Split(new char[] { '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
 				for (int i = 0; i < lines.Length; ++i) {
 					lines[i] = lines[i].Trim();
 
 					if ('!' == lines[i][0]) continue;
 
+					// Checking alive/dead state
 					foreach (char symbol in lines[i])
 						switch (symbol) {
 							case '.':
@@ -45,6 +53,8 @@ namespace GameOfLife {
 								result.Add(new CellPoint(x++, y, true));
 								break;
 						}
+
+					// Preparing next row indices
 					x = 0;
 					++y;
 				}

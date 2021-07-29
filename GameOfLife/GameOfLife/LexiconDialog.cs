@@ -20,13 +20,19 @@ namespace GameOfLife {
 		public string SelectedPattern { get => dataGridView1.SelectedRows[0].Cells[0].Value as string; }
 
 		private static string errorMessage;
+		
+		// Loading Life Lexicon patterns from file on class load into memory
 		static LexiconDialog() {
 			try {
+				// Reading & cleaning file lines
 				string text = File.ReadAllText("lexicon.txt");
 				string[] lines = text.Trim().Split(new char[] { '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
+				// Parsing patterns
 				LexiconPattern pattern = null;
 				for (int i = 0; i < lines.Length; ++i) {
 					lines[i] = lines[i].Trim();
+
 					if (':' == lines[i][0]) {
 						if (null != pattern && string.Empty != pattern.Pattern)
 							_patterns.Add(pattern);
@@ -43,6 +49,8 @@ namespace GameOfLife {
 				errorMessage = e.Message;
 			}
 		}
+		
+		// Loading patterns from static collection into dialog data grid
 		public LexiconDialog() {
 			if (null == errorMessage) {
 				InitializeComponent();
