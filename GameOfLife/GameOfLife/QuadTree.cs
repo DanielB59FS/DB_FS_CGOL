@@ -21,6 +21,15 @@ namespace GameOfLife {
 		private bool _isDivided;
 		private QuadTree<TBoundary, TData> _nw, _ne, _sw, _se;
 
+		public int Count {
+			get {
+				int count = 0;
+				count += _elements.Count;
+				if (_isDivided) count += _nw.Count + _ne.Count + _sw.Count + _se.Count;
+				return count;
+			}
+		}
+
 		public QuadTree(TBoundary boundary, Predicate<List<TData>> condition) {
 			_boundary = boundary;
 			_isSatisfy = condition;
@@ -53,6 +62,33 @@ namespace GameOfLife {
 				if (_se.Insert(element)) return true;
 				return false;
 			}
+		}
+
+		// Removal of element
+		public int Remove(Predicate<TData> match) {
+			int removed = _elements.RemoveAll(match);
+			if (_isDivided) {
+				removed += _nw.Remove(match);
+				removed += _ne.Remove(match);
+				removed += _sw.Remove(match);
+				removed += _se.Remove(match);
+			}
+			return removed;
+		}
+
+		// Removal of element
+		public int Remove(Predicate<TBoundary> verify, Predicate<TData> match) {
+			int removed = 0;
+			if (!verify(_boundary)) return removed;
+
+			removed = _elements.RemoveAll(match);
+			if (_isDivided) {
+				removed += _nw.Remove(verify, match);
+				removed += _ne.Remove(verify, match);
+				removed += _sw.Remove(verify, match);
+				removed += _se.Remove(verify, match);
+			}
+			return removed;
 		}
 
 		// Subdivide region into sub-regions
