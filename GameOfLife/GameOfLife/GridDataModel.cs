@@ -58,17 +58,15 @@ namespace GameOfLife {
 		public void GenerateCells(int seed) {
 			Random prng = new Random(seed);
 
-			List<CellPoint> delta = new List<CellPoint>();
 			foreach (CellPoint cell in _universe) {
 				if (0 == prng.Next(2)) {
 					cell._isAlive = true;
 					++Alive;
-					delta.Add(cell);
+					UpdateNeighbors(cell._x, cell._y);
 				}
 				else
 					cell._isAlive = false;
 			}
-			foreach (CellPoint cell in delta) UpdateNeighbors(cell._x, cell._y);
 		}
 
 		public void UpdateNeighbors(int x, int y) {
@@ -179,6 +177,15 @@ namespace GameOfLife {
 
 		IEnumerator IEnumerable.GetEnumerator() {
 			return GetEnumerator();
+		}
+
+		public IEnumerable<CellPoint> Query(RectangleBoundary rect) {
+			List<CellPoint> points = new List<CellPoint>();
+			for (int x = (int)rect._x; x < rect._x + rect._w; ++x)
+				for (int y = (int)rect._y; y < rect._y + rect._h; ++y)
+					if (x < GridWidth && y < GridWidth)
+						points.Add(_universe[x, y]);
+			return points;
 		}
 	}
 }

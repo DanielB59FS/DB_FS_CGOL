@@ -59,7 +59,7 @@ namespace GameOfLife {
 			timer.Interval = Properties.Settings.Default.Inverval;
 			seed = DateTime.Now.Millisecond * DateTime.Now.Second * DateTime.Now.Minute;
 
-			isQuadTree = Properties.Settings.Default.QuadTreeModel;
+			//isQuadTree = Properties.Settings.Default.QuadTreeModel;
 			Program.ModelInstance.GridWidth = Properties.Settings.Default.UniverseWidthCellCount;
 			Program.ModelInstance.GridHeight = Properties.Settings.Default.UniverseHeightCellCount;
 			Toroidal = Properties.Settings.Default.ToroidalMode;
@@ -133,30 +133,56 @@ namespace GameOfLife {
 			graphicsPanel1.Font = new Font(Font.FontFamily, (float)_cellHeight, GraphicsUnit.Pixel);
 
 			// Iterate through the universe
-			foreach (CellPoint cell in Program.ModelInstance) {
+			foreach (CellPoint cell in Program.ModelInstance.Query(new RectangleBoundary() { _x = -graphicsPanel1.AutoScrollPosition.X / _cellWidth, _y = -graphicsPanel1.AutoScrollPosition.Y / _cellHeight, _w = graphicsPanel1.Bounds.Width/_cellWidth, _h = graphicsPanel1.Bounds.Height / _cellHeight })) {
+
 				RectangleF cellRect = RectangleF.Empty;
 				cellRect.X = (float)(cell._x * _cellWidth);
 				cellRect.Y = (float)(cell._y * _cellHeight);
 				cellRect.Width = (float)_cellWidth;
 				cellRect.Height = (float)_cellHeight;
 
-				if (e.Graphics.IsVisible(cellRect)) {
-					if (cell._isAlive == true) {
-						cellBrush.Color = cellColor;
-						e.Graphics.FillRectangle(cellBrush, cellRect);
-					}
+				if (cell._isAlive == true) {
+					cellBrush.Color = cellColor;
+					e.Graphics.FillRectangle(cellBrush, cellRect);
+				}
 
-					if (0 != cell._neighbors && _displayNeighborCount) {
-						if (!cell._isAlive && 3 == cell._neighbors)
-							cellBrush.Color = Color.Green;
-						else if ((cell._isAlive && cell._neighbors < 2) || (cell._isAlive && 3 < cell._neighbors))
-							cellBrush.Color = Color.Red;
-						else
-							cellBrush.Color = cell._isAlive ? Color.Green : Color.Red;
-						e.Graphics.DrawString(cell._neighbors.ToString(), graphicsPanel1.Font, cellBrush, cellRect, format);
-					}
+				if (0 != cell._neighbors && _displayNeighborCount) {
+					if (!cell._isAlive && 3 == cell._neighbors)
+						cellBrush.Color = Color.Green;
+					else if ((cell._isAlive && cell._neighbors < 2) || (cell._isAlive && 3 < cell._neighbors))
+						cellBrush.Color = Color.Red;
+					else
+						cellBrush.Color = cell._isAlive ? Color.Green : Color.Red;
+					e.Graphics.DrawString(cell._neighbors.ToString(), graphicsPanel1.Font, cellBrush, cellRect, format);
 				}
 			}
+
+			#region Previous Version
+			//foreach (CellPoint cell in Program.ModelInstance) {
+			//	RectangleF cellRect = RectangleF.Empty;
+			//	cellRect.X = (float)(cell._x * _cellWidth);
+			//	cellRect.Y = (float)(cell._y * _cellHeight);
+			//	cellRect.Width = (float)_cellWidth;
+			//	cellRect.Height = (float)_cellHeight;
+
+			//	if (e.Graphics.IsVisible(cellRect)) {
+			//		if (cell._isAlive == true) {
+			//			cellBrush.Color = cellColor;
+			//			e.Graphics.FillRectangle(cellBrush, cellRect);
+			//		}
+
+			//		if (0 != cell._neighbors && _displayNeighborCount) {
+			//			if (!cell._isAlive && 3 == cell._neighbors)
+			//				cellBrush.Color = Color.Green;
+			//			else if ((cell._isAlive && cell._neighbors < 2) || (cell._isAlive && 3 < cell._neighbors))
+			//				cellBrush.Color = Color.Red;
+			//			else
+			//				cellBrush.Color = cell._isAlive ? Color.Green : Color.Red;
+			//			e.Graphics.DrawString(cell._neighbors.ToString(), graphicsPanel1.Font, cellBrush, cellRect, format);
+			//		}
+			//	}
+			//}
+			#endregion
 
 			if (_displayGrid) {
 				gridPen.Color = gridColor;
@@ -337,11 +363,13 @@ namespace GameOfLife {
 		private void resetToolStripMenuItem_Click(object sender, EventArgs e) {
 			Properties.Settings.Default.Reset();
 			ReadProperties();
+			Program.ModelInstance.Reset();
 		}
 
 		private void reloadToolStripMenuItem_Click(object sender, EventArgs e) {
 			Properties.Settings.Default.Reload();
 			ReadProperties();
+			Program.ModelInstance.Reset();
 		}
 
 		private void Form1_FormClosed(object sender, FormClosedEventArgs e) {
@@ -356,7 +384,7 @@ namespace GameOfLife {
 			Properties.Settings.Default.DisplayGrid = _displayGrid;
 			Properties.Settings.Default.Inverval = timer.Interval;
 
-			Properties.Settings.Default.QuadTreeModel = isQuadTree;
+			//Properties.Settings.Default.QuadTreeModel = isQuadTree;
 			Properties.Settings.Default.UniverseWidthCellCount = Program.ModelInstance.GridWidth;
 			Properties.Settings.Default.UniverseHeightCellCount = Program.ModelInstance.GridHeight;
 			Properties.Settings.Default.ToroidalMode = Toroidal;

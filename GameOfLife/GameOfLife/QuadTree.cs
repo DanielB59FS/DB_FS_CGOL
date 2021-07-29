@@ -1,20 +1,19 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GameOfLife {
-	public class QuadTree<TBoundary, TData> where TBoundary : IBoundary<TData> {
+	public class QuadTree <TBoundary, TData> : IEnumerable<TData> where TBoundary : IBoundary<TData> {
 		private TBoundary _boundary;
-		private readonly uint _capacity;
 		private Predicate<List<TData>> _isSatisfy;
 		private List<TData> _elements;
 		private bool _isDivided;
 		private QuadTree<TBoundary, TData> _nw, _ne, _sw, _se;
 		public QuadTree(TBoundary boundary, Predicate<List<TData>> condition) {
 			_boundary = boundary;
-			//_capacity = capacity;
 			_isSatisfy = condition;
 			_elements = new List<TData>();
 			_isDivided = false;
@@ -24,7 +23,6 @@ namespace GameOfLife {
 		}
 		public bool Insert(TData element) {
 			if (!Contains(element)) return false;
-			//if (_elements.Count() < _capacity) {
 			if (_isSatisfy(_elements)) {
 				_elements.Add(element);
 				return true;
@@ -74,6 +72,20 @@ namespace GameOfLife {
 				}
 			}
 			return found;
+		}
+
+		public IEnumerator<TData> GetEnumerator() {
+			foreach (TData element in _elements) yield return element;
+			if (_isDivided) {
+				foreach (TData element in _nw) yield return element;
+				foreach (TData element in _ne) yield return element;
+				foreach (TData element in _sw) yield return element;
+				foreach (TData element in _se) yield return element;
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator() {
+			return GetEnumerator();
 		}
 	}
 }

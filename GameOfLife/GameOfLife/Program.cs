@@ -12,10 +12,7 @@ namespace GameOfLife {
 		public static IDataModel<CellPoint> ModelInstance {
 			get {
 				if (null == _model)
-					if (Properties.Settings.Default.QuadTreeModel)
-						_model = null;// new QuadTreeDataModel();
-					else
-						_model = new GridDataModel();
+					_model = new GridDataModel();
 				return _model;
 			}
 		}

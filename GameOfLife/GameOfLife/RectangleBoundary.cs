@@ -22,7 +22,7 @@ namespace GameOfLife {
 		}
 	}
 	public class RectangleBoundary : IBoundary<CellPoint> {
-		public int _x, _y, _w, _h;
+		public decimal _x, _y, _w, _h;
 
 		public IBoundary<CellPoint> GetNEReigon() {
 			return new RectangleBoundary() { _x = _x + _w / 2, _y = _y, _w = _w / 2, _h = _h / 2 };
