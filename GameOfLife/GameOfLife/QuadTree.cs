@@ -49,7 +49,8 @@ namespace GameOfLife {
 			
 			// Can we still add without subdividing?
 			if (_isSatisfy(_elements)) {
-				_elements.Add(element);
+				if (!_elements.Contains(element))
+					_elements.Add(element);
 				return true;
 			}
 			else {

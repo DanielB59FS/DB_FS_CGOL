@@ -26,6 +26,14 @@ namespace GameOfLife {
 		public CellPoint(CellPoint p) : this(p._x, p._y, p._isAlive) {
 			_neighbors = p._neighbors;
 		}
+
+		public override bool Equals(object obj) {
+			bool result = false;
+			if (obj is CellPoint cell)
+				if (_x == cell._x && _y == cell._y && _neighbors == cell._neighbors && _isAlive == cell._isAlive)
+					result = true;
+			return result;
+		}
 	}
 
 	// A class to representing regions within the universe
