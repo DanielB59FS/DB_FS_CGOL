@@ -49,8 +49,7 @@ namespace GameOfLife {
 			
 			// Can we still add without subdividing?
 			if (_isSatisfy(_elements)) {
-				if (!_elements.Contains(element))
-					_elements.Add(element);
+				_elements.Add(element);
 				return true;
 			}
 			else {
@@ -101,7 +100,7 @@ namespace GameOfLife {
 			_isDivided = true;
 		}
 
-		// Returning all elements that meet the criteria
+		// Returning all elements that meet the predicate
 		public List<TData> Query(Predicate<TData> match) {
 			List<TData> found = new List<TData>();
 			found.AddRange(_elements.FindAll(match));
@@ -114,15 +113,20 @@ namespace GameOfLife {
 			return found;
 		}
 
-		// Returning all elements contained within a given boundary/region
-		public List<TData> Query(TBoundary boundary) {
+		// Returning all elements contained within a given boundary/region and optional predicate
+		public List<TData> Query(TBoundary boundary, Predicate<TData> match = null) {
 			List<TData> found = new List<TData>();
 			if (!_boundary.Intersects(boundary))
 				return found;
 			else {
 				foreach (TData element in _elements) {
 					if (boundary.Contains(element))
-						found.Add(element);
+						if (null != match) {
+							if (match(element))
+								found.Add(element);
+						}
+						else
+							found.Add(element);
 				}
 				if (_isDivided) {
 					found.AddRange(_nw.Query(boundary));

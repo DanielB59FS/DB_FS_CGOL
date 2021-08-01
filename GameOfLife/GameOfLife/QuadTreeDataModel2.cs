@@ -90,16 +90,13 @@ namespace GameOfLife {
 		#endregion
 
 		public void UpdateNeighbors(int x, int y) {
-			//if (_grid[x, y]._isAlive || 0 != _grid[x, y]._neighbors)
-			//	_universe.Insert(_grid[x, y]);
-			//else
-			//	_universe.Remove(cell => cell._x == x && cell._y == y);
-			//_universe.Insert(_grid[x, y]);
-			//if (_grid[x, y]._isAlive)
-			//	_universe.Insert(_grid[x, y]);
-			//else if (0 == _grid[x, y]._neighbors)
-			//	_universe.Remove(b => b.Contains(_grid[x, y]), cell => cell._x == x && cell._y == y);
-			_universe.Insert(_grid[x, y]);
+			if (0 == _grid[x, y]._neighbors) {
+				if (_grid[x, y]._isAlive)
+					_universe.Insert(_grid[x, y]);
+				//else
+				//	_universe.Remove(b => b.Contains(_grid[x, y]), cell => cell._x == x && cell._y == y);	 // Redundant
+			}
+
 			if (IsToroidal)
 				UpdateNeighborsToroidal(x, y);
 			else
@@ -109,11 +106,6 @@ namespace GameOfLife {
 		public void UpdateNeighborsToroidal(int x, int y) {
 			int xLen = GridWidth;
 			int yLen = GridHeight;
-
-			//if (_grid[x, y]._isAlive && 0 == _grid[x, y]._neighbors)
-			//	_universe.Insert(_grid[x, y]);
-			//else if (_grid[x, y]._isAlive && 0 == _grid[x,y]._neighbors)
-			//	_universe.Remove(b => b.Contains(_grid[x, y]), cell => cell._x == x && cell._y == y);
 
 			for (int yOffset = -1; yOffset <= 1; ++yOffset) {
 				for (int xOffset = -1; xOffset <= 1; ++xOffset) {
@@ -135,16 +127,15 @@ namespace GameOfLife {
 					// if yCheck is greater than or equal too yLen then set to 0
 					if (yLen <= yCheck) yCheck = 0;
 
+					if (0 == _grid[xCheck,yCheck]._neighbors)
+						_universe.Insert(_grid[xCheck, yCheck]);
+
 					if (_grid[x, y]._isAlive == true)
 						++_grid[xCheck, yCheck]._neighbors;
 					else
 						--_grid[xCheck, yCheck]._neighbors;
 
-					_universe.Insert(_grid[xCheck, yCheck]);
-					//if (1 == _grid[xCheck, yCheck]._neighbors && _grid[x, y]._isAlive)
-					//	_universe.Insert(_grid[xCheck, yCheck]);
-					//else if (0 == _grid[xCheck, yCheck]._neighbors)
-					//	_universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);
+					//if (!_grid[xCheck, yCheck]._isAlive && 0 == _grid[xCheck, yCheck]._neighbors) _universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);   // Redundant
 				}
 			}
 		}
@@ -173,23 +164,25 @@ namespace GameOfLife {
 					// if yCheck is greater than or equal too yLen then continue
 					if (yLen <= yCheck) continue;
 
+					if (0 == _grid[xCheck, yCheck]._neighbors)
+						_universe.Insert(_grid[xCheck, yCheck]);
+
 					if (_grid[x, y]._isAlive == true)
 						++_grid[xCheck, yCheck]._neighbors;
 					else
 						--_grid[xCheck, yCheck]._neighbors;
+
+					//if (!_grid[xCheck, yCheck]._isAlive && 0 == _grid[xCheck, yCheck]._neighbors) _universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);   // Redundant
 				}
 		}
 
 		// Toggle cell state
 		public void ToggleCell(int x, int y) {
-			if (_grid[x, y]._isAlive = !_grid[x, y]._isAlive) {
+			if (_grid[x, y]._isAlive = !_grid[x, y]._isAlive)
 				++Program.ModelInstance.Alive;
-				//if (0 == _grid[x, y]._neighbors) _universe.Insert(_grid[x, y]);
-			}
-			else {
+			else
 				--Program.ModelInstance.Alive;
-				//_universe.Remove(b => b.Contains(_grid[x, y]), cell => cell._x == x && cell._y == y);
-			}
+
 			UpdateNeighbors(x, y);
 		}
 
@@ -216,7 +209,7 @@ namespace GameOfLife {
 					--Alive;
 					delta.Add(cell);
 				}
-				else if (cell._isAlive || 0 != cell._neighbors)
+				if (cell._isAlive || 0 != cell._neighbors)
 					_sketch.Insert(cell);
 			}
 
@@ -224,7 +217,6 @@ namespace GameOfLife {
 			_sketch = null;
 
 			foreach (CellPoint cell in delta) {
-				//_universe.Insert(cell);
 				UpdateNeighbors(cell._x, cell._y);
 			}
 
@@ -240,8 +232,8 @@ namespace GameOfLife {
 			return GetEnumerator();
 		}
 
-		public IEnumerable<CellPoint> Query(RectangleBoundary rect) {
-			return _universe.Query(rect);
+		public IEnumerable<CellPoint> Query(RectangleBoundary rect, Predicate<CellPoint> match = null) {
+			return _universe.Query(rect, match);
 		}
 	}
 }

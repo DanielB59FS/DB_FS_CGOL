@@ -221,8 +221,8 @@ namespace GameOfLife {
 			return GetEnumerator();
 		}
 
-		public IEnumerable<CellPoint> Query(RectangleBoundary rect) {
-			return _universe.Query(rect);
+		public IEnumerable<CellPoint> Query(RectangleBoundary rect, Predicate<CellPoint> match = null) {
+			return _universe.Query(rect, match);
 		}
 	}
 }

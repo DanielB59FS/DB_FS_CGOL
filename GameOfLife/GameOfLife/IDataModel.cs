@@ -19,6 +19,6 @@ namespace GameOfLife {
 		void ToggleCell(int x, int y);
 		void NextGeneration();
 		void GenerateCells(int seed);
-		IEnumerable<T> Query(RectangleBoundary rect);
+		IEnumerable<T> Query(RectangleBoundary rect, Predicate<T> match = null);
 	}
 }

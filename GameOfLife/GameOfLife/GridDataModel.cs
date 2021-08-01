@@ -191,12 +191,17 @@ namespace GameOfLife {
 			return GetEnumerator();
 		}
 
-		public IEnumerable<CellPoint> Query(RectangleBoundary rect) {
+		public IEnumerable<CellPoint> Query(RectangleBoundary rect, Predicate<CellPoint> match = null) {
 			List<CellPoint> points = new List<CellPoint>();
 			for (int x = (int)rect._x; x < rect._x + rect._w; ++x)
 				for (int y = (int)rect._y; y < rect._y + rect._h; ++y)
 					if (x < GridWidth && y < GridWidth)
-						points.Add(_universe[x, y]);
+						if (null != match) {
+							if (match(_universe[x, y]))
+								points.Add(_universe[x, y]);
+						}
+						else
+							points.Add(_universe[x, y]);
 			return points;
 		}
 	}

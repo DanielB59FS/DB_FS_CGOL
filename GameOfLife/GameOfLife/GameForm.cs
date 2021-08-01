@@ -138,7 +138,7 @@ namespace GameOfLife {
 			graphicsPanel1.Font = new Font(Font.FontFamily, (float)_cellHeight, GraphicsUnit.Pixel);
 
 			// Iterate through the universe
-			foreach (CellPoint cell in Program.ModelInstance.Query(new RectangleBoundary() { _x = -graphicsPanel1.AutoScrollPosition.X / _cellWidth, _y = -graphicsPanel1.AutoScrollPosition.Y / _cellHeight, _w = graphicsPanel1.Bounds.Width/_cellWidth, _h = graphicsPanel1.Bounds.Height / _cellHeight })) {
+			foreach (CellPoint cell in Program.ModelInstance.Query(new RectangleBoundary() { _x = -graphicsPanel1.AutoScrollPosition.X / _cellWidth, _y = -graphicsPanel1.AutoScrollPosition.Y / _cellHeight, _w = graphicsPanel1.Bounds.Width/_cellWidth, _h = graphicsPanel1.Bounds.Height / _cellHeight }, cell => cell._isAlive || 0 != cell._neighbors)) {
 
 				// Calculating cell rectangle
 				RectangleF cellRect = RectangleF.Empty;
