@@ -34,6 +34,8 @@ namespace GameOfLife {
 		public BigInteger Generation { get; set; } = 0;
 		public BigInteger Alive { get; set; } = 0;
 
+		private int _regionRatio = 0;
+
 		// Resetting the model to a clean universe
 		public void Reset() {
 			_grid = new CellPoint[GridWidth, GridHeight];
@@ -42,7 +44,9 @@ namespace GameOfLife {
 				for (int j = 0; j < _grid.GetLength(1); ++j)
 					_grid[i, j] = new CellPoint(i, j);
 
-			_universe = new QuadTree<RectangleBoundary, CellPoint>(new RectangleBoundary() { _x = 0, _y = 0, _w = GridWidth, _h = GridHeight }, (list) => list.Count < 10);
+			_regionRatio = Math.Max(10, Math.Max(GridWidth, GridHeight) / 10);
+
+			_universe = new QuadTree<RectangleBoundary, CellPoint>(new RectangleBoundary() { _x = 0, _y = 0, _w = GridWidth, _h = GridHeight }, (list) => list.Count(cell => cell._isAlive) < _regionRatio);
 			_sketch = null;
 
 			Generation = Alive = 0;
@@ -70,7 +74,7 @@ namespace GameOfLife {
 		public void GenerateCells(int seed) {
 			Random prng = new Random(seed);
 			if (0 != _universe.Count)
-				_universe = new QuadTree<RectangleBoundary, CellPoint>(new RectangleBoundary() { _x = 0, _y = 0, _w = GridWidth, _h = GridHeight }, (list) => list.Count < 10);
+				_universe = new QuadTree<RectangleBoundary, CellPoint>(new RectangleBoundary() { _x = 0, _y = 0, _w = GridWidth, _h = GridHeight }, (list) => list.Count(cell => cell._isAlive) < _regionRatio);
 
 			foreach (CellPoint cell in _grid) {
 				if (0 == prng.Next(2))
@@ -92,7 +96,7 @@ namespace GameOfLife {
 		public void UpdateNeighbors(int x, int y) {
 			if (0 == _grid[x, y]._neighbors) {
 				if (_grid[x, y]._isAlive)
-					_universe.Insert(_grid[x, y]);
+					_universe.Insert(_grid[x, y], (c, b) => c.Boundary = b);
 				//else
 				//	_universe.Remove(b => b.Contains(_grid[x, y]), cell => cell._x == x && cell._y == y);	 // Redundant
 			}
@@ -128,7 +132,7 @@ namespace GameOfLife {
 					if (yLen <= yCheck) yCheck = 0;
 
 					if (0 == _grid[xCheck,yCheck]._neighbors)
-						_universe.Insert(_grid[xCheck, yCheck]);
+						_universe.Insert(_grid[xCheck, yCheck], (c, b) => c.Boundary = b);
 
 					if (_grid[x, y]._isAlive == true)
 						++_grid[xCheck, yCheck]._neighbors;
@@ -165,7 +169,7 @@ namespace GameOfLife {
 					if (yLen <= yCheck) continue;
 
 					if (0 == _grid[xCheck, yCheck]._neighbors)
-						_universe.Insert(_grid[xCheck, yCheck]);
+						_universe.Insert(_grid[xCheck, yCheck], (c, b) => c.Boundary = b);
 
 					if (_grid[x, y]._isAlive == true)
 						++_grid[xCheck, yCheck]._neighbors;
@@ -195,7 +199,7 @@ namespace GameOfLife {
 		public void NextGeneration() {
 
 			// Generating the next generation data
-			_sketch = new QuadTree<RectangleBoundary, CellPoint>(new RectangleBoundary() { _x = 0, _y = 0, _w = GridWidth, _h = GridHeight }, (list) => list.Count < 10);
+			_sketch = new QuadTree<RectangleBoundary, CellPoint>(new RectangleBoundary() { _x = 0, _y = 0, _w = GridWidth, _h = GridHeight }, (list) => list.Count(cell => cell._isAlive) < _regionRatio);
 
 			List<CellPoint> delta = new List<CellPoint>();
 			foreach (CellPoint cell in _universe) {
@@ -210,7 +214,7 @@ namespace GameOfLife {
 					delta.Add(cell);
 				}
 				if (cell._isAlive || 0 != cell._neighbors)
-					_sketch.Insert(cell);
+					_sketch.Insert(cell, (c, b) => c.Boundary = b);
 			}
 
 			_universe = _sketch;

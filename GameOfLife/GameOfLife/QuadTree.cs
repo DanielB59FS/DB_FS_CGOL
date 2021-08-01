@@ -43,23 +43,24 @@ namespace GameOfLife {
 		}
 
 		// Insertion of new element
-		public bool Insert(TData element) {
+		public bool Insert(TData element, Action<TData, TBoundary> action = null) {
 			// Does the element belong in this region
 			if (!Contains(element)) return false;
 			
 			// Can we still add without subdividing?
 			if (_isSatisfy(_elements)) {
 				_elements.Add(element);
+				if (null != action) action(element, _boundary);
 				return true;
 			}
 			else {
 				// Subdivide & Insert
 				if (!_isDivided)
 					Subdivide();
-				if (_nw.Insert(element)) return true;
-				if (_ne.Insert(element)) return true;
-				if (_sw.Insert(element)) return true;
-				if (_se.Insert(element)) return true;
+				if (_nw.Insert(element, action)) return true;
+				if (_ne.Insert(element, action)) return true;
+				if (_sw.Insert(element, action)) return true;
+				if (_se.Insert(element, action)) return true;
 				return false;
 			}
 		}

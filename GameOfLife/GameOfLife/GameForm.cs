@@ -137,8 +137,10 @@ namespace GameOfLife {
 
 			graphicsPanel1.Font = new Font(Font.FontFamily, (float)_cellHeight, GraphicsUnit.Pixel);
 
+			HashSet<RectangleBoundary> boundaries = new HashSet<RectangleBoundary>();
 			// Iterate through the universe
 			foreach (CellPoint cell in Program.ModelInstance.Query(new RectangleBoundary() { _x = -graphicsPanel1.AutoScrollPosition.X / _cellWidth, _y = -graphicsPanel1.AutoScrollPosition.Y / _cellHeight, _w = graphicsPanel1.Bounds.Width/_cellWidth, _h = graphicsPanel1.Bounds.Height / _cellHeight }, cell => cell._isAlive || 0 != cell._neighbors)) {
+				if (null != cell.Boundary) boundaries.Add(cell.Boundary);
 
 				// Calculating cell rectangle
 				RectangleF cellRect = RectangleF.Empty;
@@ -213,6 +215,20 @@ namespace GameOfLife {
 				gridPen.Color = grid10Color;
 				gridPen.Width = 4;
 				e.Graphics.DrawRectangle(gridPen, 0, 0, (float)(_cellWidth * Program.ModelInstance.GridWidth), (float)(_cellHeight * Program.ModelInstance.GridHeight));
+			}
+
+			foreach (RectangleBoundary rect in boundaries) {
+				if (null != rect) {
+					// Calculating boundary rectangle
+					gridPen.Color = Color.FromArgb(160, 0, 255, 0);
+					gridPen.Width = 2;
+					RectangleF bRect = RectangleF.Empty;
+					bRect.X = (float)(rect._x * _cellWidth);
+					bRect.Y = (float)(rect._y * _cellHeight);
+					bRect.Width = (float)(_cellWidth * rect._w);
+					bRect.Height = (float)(_cellHeight * rect._h);
+					e.Graphics.DrawRectangle(gridPen, bRect.X, bRect.Y, bRect.Width, bRect.Height);
+				}
 			}
 
 			// Drawing of HUD

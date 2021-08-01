@@ -14,6 +14,8 @@ namespace GameOfLife {
 		public int _neighbors;
 		public bool _isAlive;
 
+		public RectangleBoundary Boundary { get; set; } = null;
+
 		public CellPoint(int x, int y, bool isAlive = false) {
 			_x = x;
 			_y = y;
