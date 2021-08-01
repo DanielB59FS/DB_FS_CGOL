@@ -12,9 +12,10 @@ namespace GameOfLife {
 	/// QuadTree data model for the game of life functionality
 	/// </summary>
 	public class QuadTreeDataModel : IDataModel<CellPoint> {
-		
+
 		// Data
-		private QuadTree<RectangleBoundary, CellPoint> _universe = null;
+		private QuadTree<RectangleBoundary, CellPoint> _universe = null, _sketch = null;
+		private CellPoint[,] _grid = null;
 
 		private bool _isToroidal;
 		public bool IsToroidal {
@@ -22,8 +23,8 @@ namespace GameOfLife {
 			set {
 				_isToroidal = value;
 				if (0 != Alive) {
-					foreach (CellPoint cell in _universe) cell._neighbors = 0;
-					foreach (CellPoint cell in _universe) if (cell._isAlive) UpdateNeighbors(cell._x, cell._y);
+					foreach (CellPoint cell in _grid) cell._neighbors = 0;
+					foreach (CellPoint cell in _grid) if (cell._isAlive) UpdateNeighbors(cell._x, cell._y);
 				}
 			}
 		}
@@ -35,13 +36,16 @@ namespace GameOfLife {
 
 		// Resetting the model to a clean universe
 		public void Reset() {
+			_grid = new CellPoint[GridWidth, GridHeight];
+
+			for (int i = 0; i < _grid.GetLength(0); ++i)
+				for (int j = 0; j < _grid.GetLength(1); ++j)
+					_grid[i, j] = new CellPoint(i, j);
+
 			_universe = new QuadTree<RectangleBoundary, CellPoint>(new RectangleBoundary() { _x = 0, _y = 0, _w = GridWidth, _h = GridHeight }, (list) => list.Count < 10);
+			_sketch = null;
 
 			Generation = Alive = 0;
-
-			for (int x = 0; x < GridWidth; ++x)
-				for (int y = 0; y < GridHeight; ++y)
-					_universe.Insert(new CellPoint(x, y));
 		}
 
 		// Loading a grid pattern into the universe with selected offset
@@ -53,27 +57,24 @@ namespace GameOfLife {
 					y %= GridHeight;
 				}
 				if (x < 0 || x >= GridWidth || y < 0 || y >= GridHeight) continue;
-				if (this[x,y]._isAlive != cell._isAlive)
+				if (_grid[x, y]._isAlive != cell._isAlive)
 					ToggleCell(x, y);
 			}
 		}
 
 		public CellPoint this[int i, int j] {
-			get => _universe.Query((data) => i == data._x && j == data._y)[0];
+			get => _grid[i, j];
 		}
 
 		// Randomly changing cell's state
 		public void GenerateCells(int seed) {
 			Random prng = new Random(seed);
+			if (0 != _universe.Count)
+				_universe = new QuadTree<RectangleBoundary, CellPoint>(new RectangleBoundary() { _x = 0, _y = 0, _w = GridWidth, _h = GridHeight }, (list) => list.Count < 10);
 
-			foreach (CellPoint cell in _universe) {
-				if (0 == prng.Next(2)) {
-					cell._isAlive = true;
-					++Alive;
-					UpdateNeighbors(cell._x, cell._y);
-				}
-				else
-					cell._isAlive = false;
+			foreach (CellPoint cell in _grid) {
+				if (0 == prng.Next(2))
+					if (!cell._isAlive) ToggleCell(cell);
 			}
 		}
 
@@ -88,27 +89,28 @@ namespace GameOfLife {
 		//}
 		#endregion
 
-		// Updating the neighbor count of cells around a given cell & state
-		public void UpdateNeighbors(CellPoint cell) {
-			if (IsToroidal)
-				UpdateNeighborsToroidal(cell);
-			else
-				UpdateNeighborsFinite(cell);
-		}
-
-		// Updating the neighbor count of cells around a given cell & state
 		public void UpdateNeighbors(int x, int y) {
-			UpdateNeighbors(this[x, y]);
+			if (0 == _grid[x, y]._neighbors) {
+				if (_grid[x, y]._isAlive)
+					_universe.Insert(_grid[x, y]);
+				//else
+				//	_universe.Remove(b => b.Contains(_grid[x, y]), cell => cell._x == x && cell._y == y);	 // Redundant
+			}
+
+			if (IsToroidal)
+				UpdateNeighborsToroidal(x, y);
+			else
+				UpdateNeighborsFinite(x, y);
 		}
 
-		public void UpdateNeighborsToroidal(CellPoint cell) {
+		public void UpdateNeighborsToroidal(int x, int y) {
 			int xLen = GridWidth;
 			int yLen = GridHeight;
 
 			for (int yOffset = -1; yOffset <= 1; ++yOffset) {
 				for (int xOffset = -1; xOffset <= 1; ++xOffset) {
-					int xCheck = cell._x + xOffset;
-					int yCheck = cell._y + yOffset;
+					int xCheck = x + xOffset;
+					int yCheck = y + yOffset;
 
 					// if xOffset and yOffset are both equal to 0 then continue
 					if (0 == xOffset && 0 == yOffset) continue;
@@ -125,77 +127,78 @@ namespace GameOfLife {
 					// if yCheck is greater than or equal too yLen then set to 0
 					if (yLen <= yCheck) yCheck = 0;
 
-					if (cell._isAlive == true)
-						++this[xCheck, yCheck]._neighbors;
+					if (0 == _grid[xCheck,yCheck]._neighbors)
+						_universe.Insert(_grid[xCheck, yCheck]);
+
+					if (_grid[x, y]._isAlive == true)
+						++_grid[xCheck, yCheck]._neighbors;
 					else
-						--this[xCheck, yCheck]._neighbors;
+						--_grid[xCheck, yCheck]._neighbors;
+
+					//if (!_grid[xCheck, yCheck]._isAlive && 0 == _grid[xCheck, yCheck]._neighbors) _universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);   // Redundant
 				}
 			}
 		}
 
-		public void UpdateNeighborsToroidal(int x, int y) {
-			UpdateNeighborsToroidal(this[x, y]);
-		}
-
-		public void UpdateNeighborsFinite(CellPoint cell) {
-			foreach (CellPoint neighbor in _universe.Query(new RectangleBoundary() { _x = cell._x - 1, _y = cell._y - 1, _w = 3, _h = 3 })) {
-				if (cell == neighbor) continue;
-				if (cell._isAlive == true)
-					++neighbor._neighbors;
-				else
-					--neighbor._neighbors;
-			}
-		}
-
 		public void UpdateNeighborsFinite(int x, int y) {
-			UpdateNeighborsFinite(this[x, y]);
+			int xLen = GridWidth;
+			int yLen = GridHeight;
 
-			//int xLen = GridWidth;
-			//int yLen = GridHeight;
+			for (int yOffset = -1; yOffset <= 1; ++yOffset)
+				for (int xOffset = -1; xOffset <= 1; ++xOffset) {
+					int xCheck = x + xOffset;
+					int yCheck = y + yOffset;
 
-			//for (int yOffset = -1; yOffset <= 1; ++yOffset)
-			//	for (int xOffset = -1; xOffset <= 1; ++xOffset) {
-			//		int xCheck = x + xOffset;
-			//		int yCheck = y + yOffset;
+					// if xOffset and yOffset are both equal to 0 then continue
+					if (0 == xOffset && 0 == yOffset) continue;
 
-			//		// if xOffset and yOffset are both equal to 0 then continue
-			//		if (0 == xOffset && 0 == yOffset) continue;
+					// if xCheck is less than 0 then continue
+					if (xCheck < 0) continue;
 
-			//		// if xCheck is less than 0 then continue
-			//		if (xCheck < 0) continue;
+					// if yCheck is less than 0 then continue
+					if (yCheck < 0) continue;
 
-			//		// if yCheck is less than 0 then continue
-			//		if (yCheck < 0) continue;
+					// if xCheck is greater than or equal too xLen then continue
+					if (xLen <= xCheck) continue;
 
-			//		// if xCheck is greater than or equal too xLen then continue
-			//		if (xLen <= xCheck) continue;
+					// if yCheck is greater than or equal too yLen then continue
+					if (yLen <= yCheck) continue;
 
-			//		// if yCheck is greater than or equal too yLen then continue
-			//		if (yLen <= yCheck) continue;
+					if (0 == _grid[xCheck, yCheck]._neighbors)
+						_universe.Insert(_grid[xCheck, yCheck]);
 
-			//		if (this[x, y]._isAlive == true)
-			//			++this[xCheck, yCheck]._neighbors;
-			//		else
-			//			--this[xCheck, yCheck]._neighbors;
-			//	}
+					if (_grid[x, y]._isAlive == true)
+						++_grid[xCheck, yCheck]._neighbors;
+					else
+						--_grid[xCheck, yCheck]._neighbors;
+
+					//if (!_grid[xCheck, yCheck]._isAlive && 0 == _grid[xCheck, yCheck]._neighbors) _universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);   // Redundant
+				}
 		}
 
 		// Toggle cell state
 		public void ToggleCell(int x, int y) {
-			CellPoint cell = this[x, y];
-			if (cell._isAlive = !cell._isAlive)
+			if (_grid[x, y]._isAlive = !_grid[x, y]._isAlive)
 				++Program.ModelInstance.Alive;
 			else
 				--Program.ModelInstance.Alive;
-			UpdateNeighbors(cell);
+
+			UpdateNeighbors(x, y);
+		}
+
+		// Toggle cell state
+		public void ToggleCell(CellPoint cell) {
+			ToggleCell(cell._x, cell._y);
 		}
 
 		// Calculating the next generation of the universe
 		public void NextGeneration() {
 
 			// Generating the next generation data
+			_sketch = new QuadTree<RectangleBoundary, CellPoint>(new RectangleBoundary() { _x = 0, _y = 0, _w = GridWidth, _h = GridHeight }, (list) => list.Count < 10);
+
 			List<CellPoint> delta = new List<CellPoint>();
-			foreach (CellPoint cell in _universe)
+			foreach (CellPoint cell in _universe) {
 				if (!cell._isAlive && 3 == cell._neighbors) {
 					cell._isAlive = true;
 					++Alive;
@@ -206,8 +209,16 @@ namespace GameOfLife {
 					--Alive;
 					delta.Add(cell);
 				}
-			// Since I'm only updating the neighbor count after updating the cell's state I avoid having to maintain a sketch universe
-			foreach (CellPoint cell in delta) UpdateNeighbors(cell._x, cell._y);
+				if (cell._isAlive || 0 != cell._neighbors)
+					_sketch.Insert(cell);
+			}
+
+			_universe = _sketch;
+			_sketch = null;
+
+			foreach (CellPoint cell in delta) {
+				UpdateNeighbors(cell._x, cell._y);
+			}
 
 			// Increment generation count
 			++Generation;

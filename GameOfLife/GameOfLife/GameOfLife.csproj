@@ -84,7 +84,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuadTree.cs" />
     <Compile Include="QuadTreeDataModel.cs" />
-    <Compile Include="QuadTreeDataModel2.cs" />
     <Compile Include="RunToDialog.cs">
       <SubType>Form</SubType>
     </Compile>
