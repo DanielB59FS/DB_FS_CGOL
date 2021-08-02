@@ -227,7 +227,8 @@ namespace GameOfLife {
 					bRect.Y = (float)(rect._y * _cellHeight);
 					bRect.Width = (float)(_cellWidth * rect._w);
 					bRect.Height = (float)(_cellHeight * rect._h);
-					e.Graphics.DrawRectangle(gridPen, bRect.X, bRect.Y, bRect.Width, bRect.Height);
+					if (1 <= bRect.Width && 1 <= bRect.Height)
+						e.Graphics.DrawRectangle(gridPen, bRect.X, bRect.Y, bRect.Width, bRect.Height);
 				}
 			}
 

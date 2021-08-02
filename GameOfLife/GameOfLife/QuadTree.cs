@@ -12,7 +12,7 @@ namespace GameOfLife {
 	/// </summary>
 	/// <typeparam name="TBoundary"></typeparam>
 	/// <typeparam name="TData"></typeparam>
-	public class QuadTree <TBoundary, TData> : IEnumerable<TData> where TBoundary : IBoundary<TData> {
+	public class QuadTree <TBoundary, TData> : IDisposable, IEnumerable<TData> where TBoundary : IBoundary<TData> {
 
 		// Data
 		private TBoundary _boundary;
@@ -20,6 +20,7 @@ namespace GameOfLife {
 		private List<TData> _elements;
 		private bool _isDivided;
 		private QuadTree<TBoundary, TData> _nw, _ne, _sw, _se;
+		private bool disposedValue;
 
 		public int Count {
 			get {
@@ -46,22 +47,53 @@ namespace GameOfLife {
 		public bool Insert(TData element, Action<TData, TBoundary> action = null) {
 			// Does the element belong in this region
 			if (!Contains(element)) return false;
-			
-			// Can we still add without subdividing?
-			if (_isSatisfy(_elements)) {
+
+			#region New Version
+			// Insert & Subdivide
+			if (!_isDivided) {
 				_elements.Add(element);
 				if (null != action) action(element, _boundary);
+				if (!_isSatisfy(_elements))
+					Subdivide();
 				return true;
 			}
 			else {
-				// Subdivide & Insert
-				if (!_isDivided)
-					Subdivide();
+				// Insert & Merge
 				if (_nw.Insert(element, action)) return true;
 				if (_ne.Insert(element, action)) return true;
 				if (_sw.Insert(element, action)) return true;
 				if (_se.Insert(element, action)) return true;
 				return false;
+			}
+			#endregion
+
+			#region Old Version
+			//// Can we still add without subdividing?
+			//if (_isSatisfy(_elements)) {
+			//	_elements.Add(element);
+			//	if (null != action) action(element, _boundary);
+			//	return true;
+			//}
+			//else {
+			//	// Subdivide & Insert
+			//	if (!_isDivided)
+			//		Subdivide();
+			//	if (_nw.Insert(element, action)) return true;
+			//	if (_ne.Insert(element, action)) return true;
+			//	if (_sw.Insert(element, action)) return true;
+			//	if (_se.Insert(element, action)) return true;
+			//	return false;
+			//}
+			#endregion
+		}
+
+		public void Merge() {
+			if (_isDivided && 0 == Count - _elements.Count && _isSatisfy(_elements)) {
+				_nw.Dispose();
+				_ne.Dispose();
+				_sw.Dispose();
+				_se.Dispose();
+				_isDivided = false;
 			}
 		}
 
@@ -74,6 +106,7 @@ namespace GameOfLife {
 				removed += _sw.Remove(match);
 				removed += _se.Remove(match);
 			}
+			if (0 < removed) Merge();
 			return removed;
 		}
 
@@ -89,6 +122,7 @@ namespace GameOfLife {
 				removed += _sw.Remove(verify, match);
 				removed += _se.Remove(verify, match);
 			}
+			if (0 < removed) Merge();
 			return removed;
 		}
 
@@ -152,6 +186,29 @@ namespace GameOfLife {
 
 		IEnumerator IEnumerable.GetEnumerator() {
 			return GetEnumerator();
+		}
+
+		protected virtual void Dispose(bool disposing) {
+			if (!disposedValue) {
+				if (disposing && _isDivided) {
+					_nw.Dispose();
+					_ne.Dispose();
+					_sw.Dispose();
+					_se.Dispose();
+				}
+
+				_elements = null; _nw = _ne = _sw = _se = null;
+				disposedValue = true;
+			}
+		}
+
+		~QuadTree() {
+			Dispose(disposing: false);
+		}
+
+		public void Dispose() {
+			Dispose(disposing: true);
+			GC.SuppressFinalize(this);
 		}
 	}
 }

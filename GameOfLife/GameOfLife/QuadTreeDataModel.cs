@@ -97,8 +97,8 @@ namespace GameOfLife {
 			if (0 == _grid[x, y]._neighbors) {
 				if (_grid[x, y]._isAlive)
 					_universe.Insert(_grid[x, y], (c, b) => c.Boundary = b);
-				//else
-				//	_universe.Remove(b => b.Contains(_grid[x, y]), cell => cell._x == x && cell._y == y);	 // Redundant
+				else
+					_universe.Remove(b => b.Contains(_grid[x, y]), cell => cell._x == x && cell._y == y);    // Redundant
 			}
 
 			if (IsToroidal)
@@ -139,7 +139,7 @@ namespace GameOfLife {
 					else
 						--_grid[xCheck, yCheck]._neighbors;
 
-					//if (!_grid[xCheck, yCheck]._isAlive && 0 == _grid[xCheck, yCheck]._neighbors) _universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);   // Redundant
+					if (!_grid[xCheck, yCheck]._isAlive && 0 == _grid[xCheck, yCheck]._neighbors) _universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);   // Redundant
 				}
 			}
 		}
@@ -176,7 +176,7 @@ namespace GameOfLife {
 					else
 						--_grid[xCheck, yCheck]._neighbors;
 
-					//if (!_grid[xCheck, yCheck]._isAlive && 0 == _grid[xCheck, yCheck]._neighbors) _universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);   // Redundant
+					if (!_grid[xCheck, yCheck]._isAlive && 0 == _grid[xCheck, yCheck]._neighbors) _universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);   // Redundant
 				}
 		}
 
@@ -199,10 +199,10 @@ namespace GameOfLife {
 		public void NextGeneration() {
 
 			// Generating the next generation data
-			_sketch = new QuadTree<RectangleBoundary, CellPoint>(new RectangleBoundary() { _x = 0, _y = 0, _w = GridWidth, _h = GridHeight }, (list) => list.Count(cell => cell._isAlive) < _regionRatio);
+			//_sketch = new QuadTree<RectangleBoundary, CellPoint>(new RectangleBoundary() { _x = 0, _y = 0, _w = GridWidth, _h = GridHeight }, (list) => list.Count(cell => cell._isAlive) < _regionRatio);
 
 			List<CellPoint> delta = new List<CellPoint>();
-			foreach (CellPoint cell in _universe) {
+			foreach (CellPoint cell in _universe.ToList()) {
 				if (!cell._isAlive && 3 == cell._neighbors) {
 					cell._isAlive = true;
 					++Alive;
@@ -213,12 +213,13 @@ namespace GameOfLife {
 					--Alive;
 					delta.Add(cell);
 				}
-				if (cell._isAlive || 0 != cell._neighbors)
-					_sketch.Insert(cell, (c, b) => c.Boundary = b);
+				//if (cell._isAlive || 0 != cell._neighbors)
+				//	_sketch.Insert(cell, (c, b) => c.Boundary = b);
 			}
 
-			_universe = _sketch;
-			_sketch = null;
+			//_universe.Dispose();
+			//_universe = _sketch;
+			//_sketch = null;
 
 			foreach (CellPoint cell in delta) {
 				UpdateNeighbors(cell._x, cell._y);
