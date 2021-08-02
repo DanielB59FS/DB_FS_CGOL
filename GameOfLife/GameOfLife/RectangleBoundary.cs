@@ -30,11 +30,20 @@ namespace GameOfLife {
 		}
 
 		public override bool Equals(object obj) {
-			bool result = false;
-			if (obj is CellPoint cell)
-				if (_x == cell._x && _y == cell._y && _neighbors == cell._neighbors && _isAlive == cell._isAlive)
-					result = true;
-			return result;
+			return obj is CellPoint point &&
+				   _x == point._x &&
+				   _y == point._y &&
+				   _neighbors == point._neighbors &&
+				   _isAlive == point._isAlive;
+		}
+
+		public override int GetHashCode() {
+			int hashCode = -107321585;
+			hashCode = hashCode * -1521134295 + _x.GetHashCode();
+			hashCode = hashCode * -1521134295 + _y.GetHashCode();
+			hashCode = hashCode * -1521134295 + _neighbors.GetHashCode();
+			hashCode = hashCode * -1521134295 + _isAlive.GetHashCode();
+			return hashCode;
 		}
 	}
 
