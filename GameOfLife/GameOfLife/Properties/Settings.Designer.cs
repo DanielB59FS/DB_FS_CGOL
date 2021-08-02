@@ -202,5 +202,29 @@ namespace GameOfLife.Properties {
                 this["CellHeight"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DisplayRegion {
+            get {
+                return ((bool)(this["DisplayRegion"]));
+            }
+            set {
+                this["DisplayRegion"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("85, 255, 85")]
+        public global::System.Drawing.Color RegionColor {
+            get {
+                return ((global::System.Drawing.Color)(this["RegionColor"]));
+            }
+            set {
+                this["RegionColor"] = value;
+            }
+        }
     }
 }

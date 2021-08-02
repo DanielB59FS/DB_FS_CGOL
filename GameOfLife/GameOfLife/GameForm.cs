@@ -25,6 +25,7 @@ namespace GameOfLife {
 		bool _displayHUD;
 		bool _displayNeighborCount;
 		bool _displayGrid;
+		bool _displayRegion;
 
 		decimal _runTo = -1;
 
@@ -34,6 +35,7 @@ namespace GameOfLife {
 		Color cellColor;
 		Color gridColor;
 		Color grid10Color;
+		Color regionColor;
 
 		// Pen & Brush
 		Pen gridPen;
@@ -52,12 +54,14 @@ namespace GameOfLife {
 			gridColor = Properties.Settings.Default.GridColor;
 			grid10Color = Properties.Settings.Default.Grid10Color;
 			graphicsPanel1.BackColor = Properties.Settings.Default.BackColor;
+			regionColor = Properties.Settings.Default.RegionColor;
 
 			// Display states
 			_scrollable = Properties.Settings.Default.Scrollable;
 			_displayHUD = Properties.Settings.Default.DisplayHUD;
 			_displayNeighborCount = Properties.Settings.Default.DisplayNeighborCount;
 			_displayGrid = Properties.Settings.Default.DisplayGrid;
+			_displayRegion = Properties.Settings.Default.DisplayRegion;
 			timer.Interval = Properties.Settings.Default.Inverval;
 			seed = DateTime.Now.Millisecond * DateTime.Now.Second * DateTime.Now.Minute;
 
@@ -72,6 +76,7 @@ namespace GameOfLife {
 			hUDContextMenuItem.Checked = hUDToolStripMenuItem.Checked = _displayHUD;
 			neighborCountContextMenuItem.Checked = neighborCountToolStripMenuItem.Checked = _displayNeighborCount;
 			gridContextMenuItem.Checked = gridToolStripMenuItem.Checked = _displayGrid;
+			regionContextMenuItem.Checked = regionToolStripMenuItem.Checked = _displayRegion;
 			toroidalToolStripMenuItem.Checked = Toroidal;
 			finiteToolStripMenuItem.Checked = !Toroidal;
 
@@ -217,20 +222,22 @@ namespace GameOfLife {
 				e.Graphics.DrawRectangle(gridPen, 0, 0, (float)(_cellWidth * Program.ModelInstance.GridWidth), (float)(_cellHeight * Program.ModelInstance.GridHeight));
 			}
 
-			foreach (RectangleBoundary rect in boundaries) {
-				if (null != rect) {
-					// Calculating boundary rectangle
-					gridPen.Color = Color.FromArgb(160, 0, 255, 0);
-					gridPen.Width = 2;
-					RectangleF bRect = RectangleF.Empty;
-					bRect.X = (float)(rect._x * _cellWidth);
-					bRect.Y = (float)(rect._y * _cellHeight);
-					bRect.Width = (float)(_cellWidth * rect._w);
-					bRect.Height = (float)(_cellHeight * rect._h);
-					if (1 <= bRect.Width && 1 <= bRect.Height)
-						e.Graphics.DrawRectangle(gridPen, bRect.X, bRect.Y, bRect.Width, bRect.Height);
+			// Drawing regions
+			if (_displayRegion)
+				foreach (RectangleBoundary rect in boundaries) {
+					if (null != rect) {
+						// Calculating boundary rectangle
+						gridPen.Color = regionColor;
+						gridPen.Width = 2;
+						RectangleF bRect = RectangleF.Empty;
+						bRect.X = (float)(rect._x * _cellWidth);
+						bRect.Y = (float)(rect._y * _cellHeight);
+						bRect.Width = (float)(_cellWidth * rect._w);
+						bRect.Height = (float)(_cellHeight * rect._h);
+						if (1 <= bRect.Width && 1 <= bRect.Height)
+							e.Graphics.DrawRectangle(gridPen, bRect.X, bRect.Y, bRect.Width, bRect.Height);
+					}
 				}
-			}
 
 			// Drawing of HUD
 			if (_displayHUD) {
@@ -414,6 +421,7 @@ namespace GameOfLife {
 
 		// Settings reset button event
 		private void resetToolStripMenuItem_Click(object sender, EventArgs e) {
+			pauseToolStripButton_Click(sender, e);
 			Properties.Settings.Default.Reset();
 			ReadProperties();
 			Program.ModelInstance.Reset();
@@ -421,6 +429,7 @@ namespace GameOfLife {
 
 		// Settings reload button event
 		private void reloadToolStripMenuItem_Click(object sender, EventArgs e) {
+			pauseToolStripButton_Click(sender, e);
 			Properties.Settings.Default.Reload();
 			ReadProperties();
 			Program.ModelInstance.Reset();
@@ -433,12 +442,14 @@ namespace GameOfLife {
 			Properties.Settings.Default.GridColor = gridColor;
 			Properties.Settings.Default.Grid10Color = grid10Color;
 			Properties.Settings.Default.BackColor = graphicsPanel1.BackColor;
+			Properties.Settings.Default.RegionColor = regionColor;
 
 			// Display & UI states
 			Properties.Settings.Default.Scrollable = _scrollable;
 			Properties.Settings.Default.DisplayHUD = _displayHUD;
 			Properties.Settings.Default.DisplayNeighborCount = _displayNeighborCount;
 			Properties.Settings.Default.DisplayGrid = _displayGrid;
+			Properties.Settings.Default.DisplayRegion = _displayRegion;
 			Properties.Settings.Default.Inverval = timer.Interval;
 
 			// Model settings
@@ -594,6 +605,24 @@ namespace GameOfLife {
 			}
 		}
 
+		private void regionToolStripMenuItem_Click(object sender, EventArgs e) {
+			regionToolStripMenuItem.Checked = !regionToolStripMenuItem.Checked;
+			regionContextMenuItem.Checked = !regionContextMenuItem.Checked;
+			_displayRegion = !_displayRegion;
+			graphicsPanel1.Invalidate();
+		}
+
+		private void regionColorToolStripMenuItem_Click(object sender, EventArgs e) {
+			using (ColorDialog cdlg = new ColorDialog()) {
+				cdlg.Color = regionColor;
+
+				if (DialogResult.OK == cdlg.ShowDialog())
+					regionColor = cdlg.Color;
+
+				graphicsPanel1.Invalidate();
+			}
+		}
+
 		// Import button event
 		private void importToolStripMenuItem_Click(object sender, EventArgs e) {
 			// Pausing universe
@@ -604,6 +633,7 @@ namespace GameOfLife {
 			string pattern = null;
 			if (DialogResult.Yes == res)
 				// Importing from Life Lexicon patterns menu
+				// Note: an exceptions is thrown when pressing enter quickly! TODO: find a fix
 				using (LexiconDialog ldlg = new LexiconDialog()) {
 					if (!ldlg.IsDisposed && DialogResult.OK == ldlg.ShowDialog()) {
 						pattern = ldlg.SelectedPattern;

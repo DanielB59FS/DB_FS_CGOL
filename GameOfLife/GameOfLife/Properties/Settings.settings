@@ -47,5 +47,11 @@
     <Setting Name="CellHeight" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="DisplayRegion" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RegionColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">85, 255, 85</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
