@@ -98,7 +98,7 @@ namespace GameOfLife {
 				if (_grid[x, y]._isAlive)
 					_universe.Insert(_grid[x, y], (c, b) => c.Boundary = b);
 				else
-					_universe.Remove(b => b.Contains(_grid[x, y]), cell => cell._x == x && cell._y == y);    // Redundant
+					_universe.Remove(b => b.Contains(_grid[x, y]), cell => cell._x == x && cell._y == y);
 			}
 
 			if (IsToroidal)
@@ -139,7 +139,7 @@ namespace GameOfLife {
 					else
 						--_grid[xCheck, yCheck]._neighbors;
 
-					if (!_grid[xCheck, yCheck]._isAlive && 0 == _grid[xCheck, yCheck]._neighbors) _universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);   // Redundant
+					if (!_grid[xCheck, yCheck]._isAlive && 0 == _grid[xCheck, yCheck]._neighbors) _universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);
 				}
 			}
 		}
@@ -176,7 +176,7 @@ namespace GameOfLife {
 					else
 						--_grid[xCheck, yCheck]._neighbors;
 
-					if (!_grid[xCheck, yCheck]._isAlive && 0 == _grid[xCheck, yCheck]._neighbors) _universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);   // Redundant
+					if (!_grid[xCheck, yCheck]._isAlive && 0 == _grid[xCheck, yCheck]._neighbors) _universe.Remove(b => b.Contains(_grid[xCheck, yCheck]), cell => cell._x == xCheck && cell._y == yCheck);
 				}
 		}
 

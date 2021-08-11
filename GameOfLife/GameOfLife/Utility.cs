@@ -13,8 +13,8 @@ namespace GameOfLife {
 
 			if (null != model) {
 				builder.Append("!" + DateTime.Now.ToString() + "\n");
-				for (int x = 0; x < model.GridWidth; ++x) {
-					for (int y = 0; y < model.GridHeight; ++y) {
+				for (int y = 0; y < model.GridWidth; ++y) {
+					for (int x = 0; x < model.GridHeight; ++x) {
 						if (model[x, y]._isAlive)
 							builder.Append('O');
 						else
