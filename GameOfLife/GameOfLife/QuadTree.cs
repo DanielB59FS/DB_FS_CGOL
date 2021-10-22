@@ -173,6 +173,21 @@ namespace GameOfLife {
 			return found;
 		}
 
+		public List<TBoundary> Boundaries(TBoundary boundary) {
+			List<TBoundary> found = new List<TBoundary>();
+			if (null == boundary)
+				found.Add(_boundary);
+			else if (boundary.Intersects(_boundary))
+				found.Add(_boundary);
+			if (_isDivided) {
+				found.AddRange(_ne.Boundaries(boundary));
+				found.AddRange(_sw.Boundaries(boundary));
+				found.AddRange(_nw.Boundaries(boundary));
+				found.AddRange(_se.Boundaries(boundary));
+			}
+			return found;
+		}
+
 		// Iterating over all elements
 		public IEnumerator<TData> GetEnumerator() {
 			foreach (TData element in _elements) yield return element;
